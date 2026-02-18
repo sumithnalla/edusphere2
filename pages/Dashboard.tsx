@@ -5,6 +5,20 @@ import { UserProfile } from '../types/database';
 import TestsSection from './tests/TestsSection';
 import TestAttemptPage from './tests/TestAttemptPage';
 import TestResultPage from './tests/TestResultPage';
+import { 
+  Home, 
+  Video, 
+  FileText, 
+  MessageCircle, 
+  Bell, 
+  User, 
+  Wifi, 
+  Battery,
+  Clock,
+  Calendar,
+  Play,
+  ChevronRight
+} from 'lucide-react';
 
 type Subject = 'maths' | 'physics' | 'chemistry';
 
@@ -64,6 +78,7 @@ const getRouteTitle = (pathname: string) => {
 const Dashboard: React.FC = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [currentTime, setCurrentTime] = useState(new Date());
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -110,6 +125,14 @@ const Dashboard: React.FC = () => {
     };
   }, [navigate]);
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate('/login');
@@ -130,57 +153,248 @@ const Dashboard: React.FC = () => {
     return <Navigate to="/login" replace />;
   }
 
-  const navClass = ({ isActive }: { isActive: boolean }) =>
-    `block p-3 rounded-lg font-medium transition ${
-      isActive ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50'
-    }`;
+  // Mobile Tab Navigation
+  const MobileTabNav = () => (
+    <div className="bg-white border-b border-gray-200 overflow-x-auto">
+      <div className="flex space-x-6 px-4 py-3 min-w-max">
+        <NavLink
+          to="/dashboard/classes"
+          className={({ isActive }) => `
+            px-4 py-2 text-sm font-medium whitespace-nowrap border-b-2 transition-colors
+            ${isActive 
+              ? 'text-indigo-600 border-indigo-600' 
+              : 'text-gray-500 border-transparent hover:text-gray-700'
+            }
+          `}
+        >
+          Live Classes
+        </NavLink>
+        <NavLink
+          to="/dashboard/recordings"
+          className={({ isActive }) => `
+            px-4 py-2 text-sm font-medium whitespace-nowrap border-b-2 transition-colors
+            ${isActive 
+              ? 'text-indigo-600 border-indigo-600' 
+              : 'text-gray-500 border-transparent hover:text-gray-700'
+            }
+          `}
+        >
+          Recorded
+        </NavLink>
+        <NavLink
+          to="/dashboard/tests"
+          className={({ isActive }) => `
+            px-4 py-2 text-sm font-medium whitespace-nowrap border-b-2 transition-colors
+            ${isActive 
+              ? 'text-indigo-600 border-indigo-600' 
+              : 'text-gray-500 border-transparent hover:text-gray-700'
+            }
+          `}
+        >
+          Tests
+        </NavLink>
+        {hasDoubtsAccess && (
+          <NavLink
+            to="/dashboard/doubts"
+            className={({ isActive }) => `
+              px-4 py-2 text-sm font-medium whitespace-nowrap border-b-2 transition-colors
+              ${isActive 
+                ? 'text-indigo-600 border-indigo-600' 
+                : 'text-gray-500 border-transparent hover:text-gray-700'
+              }
+            `}
+          >
+            Doubts
+          </NavLink>
+        )}
+      </div>
+    </div>
+  );
+
+  // Mobile Bottom Navigation
+  const MobileBottomNav = () => (
+    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 md:hidden">
+      <div className="flex justify-around py-2">
+        <NavLink
+          to="/dashboard/classes"
+          className={({ isActive }) => `
+            flex flex-col items-center p-2 text-xs transition-colors
+            ${isActive ? 'text-indigo-600' : 'text-gray-500'}
+          `}
+        >
+          <Home className="w-5 h-5 mb-1" />
+          <span>Home</span>
+        </NavLink>
+        <NavLink
+          to="/dashboard/recordings"
+          className={({ isActive }) => `
+            flex flex-col items-center p-2 text-xs transition-colors
+            ${isActive ? 'text-indigo-600' : 'text-gray-500'}
+          `}
+        >
+          <Video className="w-5 h-5 mb-1" />
+          <span>Recorded</span>
+        </NavLink>
+        <NavLink
+          to="/dashboard/tests"
+          className={({ isActive }) => `
+            flex flex-col items-center p-2 text-xs transition-colors
+            ${isActive ? 'text-indigo-600' : 'text-gray-500'}
+          `}
+        >
+          <FileText className="w-5 h-5 mb-1" />
+          <span>Tests</span>
+        </NavLink>
+        <NavLink
+          to="/dashboard/doubts"
+          className={({ isActive }) => `
+            flex flex-col items-center p-2 text-xs transition-colors
+            ${isActive ? 'text-indigo-600' : 'text-gray-500'}
+          `}
+        >
+          <MessageCircle className="w-5 h-5 mb-1" />
+          <span>Doubts</span>
+        </NavLink>
+        <NavLink
+          to="/dashboard/profile"
+          className={({ isActive }) => `
+            flex flex-col items-center p-2 text-xs transition-colors
+            ${isActive ? 'text-indigo-600' : 'text-gray-500'}
+          `}
+        >
+          <User className="w-5 h-5 mb-1" />
+          <span>Profile</span>
+        </NavLink>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
-      <aside className="w-full md:w-64 bg-white border-r flex flex-col">
-        <div className="p-6 border-b">
-          <Link to="/" className="text-xl font-bold text-indigo-600">
-            EDUSPACE
-          </Link>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* Mobile Header */}
+      <header className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between lg:hidden sticky top-0 z-40">
+        <div className="flex items-center space-x-2 text-xs text-gray-600">
+          <span>{currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
+          <Wifi className="w-3 h-3" />
+          <Battery className="w-4 h-4" />
         </div>
-        <nav className="p-4 flex-grow space-y-1">
-          <NavLink to="/dashboard/classes" className={navClass}>
-            My Classes
-          </NavLink>
-          <NavLink to="/dashboard/recordings" className={navClass}>
-            Recorded Classes
-          </NavLink>
-          <NavLink to="/dashboard/tests" className={navClass}>
-            Tests
-          </NavLink>
-          {hasDoubtsAccess && (
-            <NavLink to="/dashboard/doubts" className={navClass}>
-              Doubts Classes
+        <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2">
+            <span className="text-lg font-bold text-indigo-600">EDUSPACE</span>
+          </div>
+          <div className="relative">
+            <Bell className="w-5 h-5 text-gray-600" />
+            <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
+          </div>
+          <button 
+            onClick={() => navigate('/dashboard/profile')}
+            className="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center hover:bg-indigo-700 transition-colors"
+          >
+            <User className="w-5 h-5 text-white" />
+          </button>
+        </div>
+      </header>
+
+      {/* Desktop Header */}
+      <header className="hidden lg:flex bg-white border-b border-gray-200 h-16 items-center justify-between px-6 sticky top-0 z-40">
+        <div className="flex items-center space-x-4">
+          <span className="text-lg font-bold text-indigo-600">EDUSPACE</span>
+          <div className="flex items-center space-x-2 text-sm text-gray-600">
+            <span>{currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
+            <Wifi className="w-4 h-4" />
+            <Battery className="w-5 h-5" />
+          </div>
+        </div>
+        <div className="flex items-center space-x-4">
+          <div className="relative">
+            <Bell className="w-5 h-5 text-gray-600" />
+            <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
+          </div>
+          <button 
+            onClick={() => navigate('/dashboard/profile')}
+            className="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center hover:bg-indigo-700 transition-colors"
+          >
+            <User className="w-5 h-5 text-white" />
+          </button>
+          <span className="text-sm text-gray-500">Hi, {profile.student_name}</span>
+          <button onClick={handleLogout} className="text-sm font-medium text-gray-500 hover:text-red-600">
+            Logout
+          </button>
+        </div>
+      </header>
+
+      {/* Main Content Area */}
+      <main className="flex-1 flex flex-col pb-20 lg:pb-0">
+        {/* Desktop Tab Navigation */}
+        <div className="hidden lg:block bg-white border-b border-gray-200">
+          <div className="flex space-x-6 px-6 py-3">
+            <NavLink
+              to="/dashboard/classes"
+              className={({ isActive }) => `
+                px-4 py-2 text-sm font-medium whitespace-nowrap border-b-2 transition-colors
+                ${isActive 
+                  ? 'text-indigo-600 border-indigo-600' 
+                  : 'text-gray-500 border-transparent hover:text-gray-700'
+                }
+              `}
+            >
+              Live Classes
             </NavLink>
-          )}
-          <NavLink to="/dashboard/profile" className={navClass}>
-            Profile
-          </NavLink>
-        </nav>
-      </aside>
-
-      <main className="flex-grow flex flex-col">
-        <header className="bg-white border-b h-16 flex items-center justify-between px-6 sticky top-0 z-10">
-          <div className="flex items-center space-x-3">
-            <h2 className="font-bold text-gray-800">{pageTitle}</h2>
-            <span className="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-xs font-bold uppercase rounded-md tracking-wide">
-              {profile.batches?.batch_name}
-            </span>
+            <NavLink
+              to="/dashboard/recordings"
+              className={({ isActive }) => `
+                px-4 py-2 text-sm font-medium whitespace-nowrap border-b-2 transition-colors
+                ${isActive 
+                  ? 'text-indigo-600 border-indigo-600' 
+                  : 'text-gray-500 border-transparent hover:text-gray-700'
+                }
+              `}
+            >
+              Recorded
+            </NavLink>
+            <NavLink
+              to="/dashboard/tests"
+              className={({ isActive }) => `
+                px-4 py-2 text-sm font-medium whitespace-nowrap border-b-2 transition-colors
+                ${isActive 
+                  ? 'text-indigo-600 border-indigo-600' 
+                  : 'text-gray-500 border-transparent hover:text-gray-700'
+                }
+              `}
+            >
+              Tests
+            </NavLink>
+            {hasDoubtsAccess && (
+              <NavLink
+                to="/dashboard/doubts"
+                className={({ isActive }) => `
+                  px-4 py-2 text-sm font-medium whitespace-nowrap border-b-2 transition-colors
+                  ${isActive 
+                    ? 'text-indigo-600 border-indigo-600' 
+                    : 'text-gray-500 border-transparent hover:text-gray-700'
+                  }
+                `}
+              >
+                Doubts
+              </NavLink>
+            )}
+            <NavLink
+              to="/dashboard/profile"
+              className={({ isActive }) => `
+                px-4 py-2 text-sm font-medium whitespace-nowrap border-b-2 transition-colors
+                ${isActive 
+                  ? 'text-indigo-600 border-indigo-600' 
+                  : 'text-gray-500 border-transparent hover:text-gray-700'
+                }
+              `}
+            >
+              Profile
+            </NavLink>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-500">Hi, {profile.student_name}</span>
-            <button onClick={handleLogout} className="text-sm font-medium text-gray-500 hover:text-red-600">
-              Logout
-            </button>
-          </div>
-        </header>
+        </div>
 
-        <div className="p-8">
+        {/* Content */}
+        <div className="flex-1 p-4 lg:p-6 max-w-7xl mx-auto w-full">
           <Routes>
             <Route index element={<Navigate to="classes" replace />} />
             <Route path="classes" element={<MyClassesSection />} />
@@ -194,12 +408,19 @@ const Dashboard: React.FC = () => {
           </Routes>
         </div>
       </main>
+
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav />
     </div>
   );
 };
 
 const MyClassesSection: React.FC = () => {
-  const [classesBySubject, setClassesBySubject] = useState<Partial<Record<Subject, DailyClassRow>>>({});
+  const [classesBySubject, setClassesBySubject] = useState<Record<Subject, DailyClassRow | null>>({
+    maths: null,
+    physics: null,
+    chemistry: null
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -221,7 +442,11 @@ const MyClassesSection: React.FC = () => {
         return;
       }
 
-      const mapped: Partial<Record<Subject, DailyClassRow>> = {};
+      const mapped: Record<Subject, DailyClassRow | null> = {
+        maths: null,
+        physics: null,
+        chemistry: null
+      };
       (data || []).forEach((row) => {
         if (row.subject === 'maths' || row.subject === 'physics' || row.subject === 'chemistry') {
           mapped[row.subject] = row as DailyClassRow;
@@ -238,56 +463,98 @@ const MyClassesSection: React.FC = () => {
   if (loading) return <p className="text-gray-500">Loading today's classes...</p>;
   if (error) return <p className="text-red-600">Failed to load classes: {error}</p>;
 
-  return (
-    <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">Today's Live Classes</h1>
-      <p className="text-gray-500 mb-8">{new Date().toLocaleDateString()}</p>
+  const getSubjectColor = (subject: Subject) => {
+    switch (subject) {
+      case 'maths': return 'bg-blue-100 text-blue-700';
+      case 'physics': return 'bg-green-100 text-green-700';
+      case 'chemistry': return 'bg-orange-100 text-orange-700';
+      default: return 'bg-gray-100 text-gray-700';
+    }
+  };
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+  const getSubjectIcon = (subject: Subject) => {
+    switch (subject) {
+      case 'maths': return 'M';
+      case 'physics': return 'P';
+      case 'chemistry': return 'C';
+      default: return 'D';
+    }
+  };
+
+  return (
+    <div className="space-y-4 lg:space-y-6">
+      {/* Date Header */}
+      <div className="bg-white rounded-lg p-4 lg:p-6 shadow-sm">
+        <h2 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">Today's Live Classes</h2>
+        <p className="text-sm text-gray-600">
+          {new Date().toLocaleDateString('en-US', { 
+            month: 'long', 
+            day: 'numeric', 
+            year: 'numeric' 
+          })}
+        </p>
+      </div>
+
+      {/* Class Cards - Mobile: Single Column, Desktop: Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
         {SUBJECTS.map((subject) => {
           const classInfo = classesBySubject[subject];
-          const initials = (classInfo?.teacher_name || formatSubject(subject)).slice(0, 1).toUpperCase();
+          const initials = getSubjectIcon(subject);
+          const subjectColor = getSubjectColor(subject);
 
           return (
-            <div key={subject} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col">
-              <div className="flex items-center gap-3 mb-5">
-                {classInfo?.teacher_photo_url ? (
-                  <img
-                    src={classInfo.teacher_photo_url}
-                    alt={classInfo.teacher_name}
-                    className="h-12 w-12 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="h-12 w-12 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center">
-                    {initials}
+            <div key={subject} className="bg-white rounded-lg p-4 lg:p-6 shadow-sm border border-gray-100">
+              <div className="flex items-start space-x-3 lg:space-x-4 mb-4 lg:mb-6">
+                {/* Teacher Avatar */}
+                <div className={`w-12 h-12 lg:w-16 lg:h-16 rounded-full ${subjectColor} flex items-center justify-center font-bold text-white flex-shrink-0`}>
+                  {classInfo?.teacher_photo_url ? (
+                    <img
+                      src={classInfo.teacher_photo_url}
+                      alt={classInfo.teacher_name}
+                      className="w-full h-full rounded-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-lg lg:text-xl">{initials}</span>
+                  )}
+                </div>
+
+                {/* Subject and Teacher Info */}
+                <div className="flex-1 min-w-0">
+                  <div className={`inline-block px-2 py-1 rounded text-xs font-bold uppercase tracking-wide mb-1 lg:mb-2 ${subjectColor}`}>
+                    {formatSubject(subject)}
                   </div>
-                )}
-                <div>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wide">{formatSubject(subject)}</p>
-                  <p className="font-semibold text-gray-900">{classInfo?.teacher_name || 'Teacher TBD'}</p>
+                  <h3 className="font-semibold text-gray-900 text-sm lg:text-base truncate">
+                    {classInfo?.teacher_name || 'Teacher TBD'}
+                  </h3>
+                  <p className="text-xs lg:text-sm text-gray-500 line-clamp-2">
+                    {classInfo?.class_title || `No ${formatSubject(subject)} class today`}
+                  </p>
                 </div>
               </div>
 
-              <h3 className="font-bold text-lg text-gray-900 mb-2">
-                {classInfo?.class_title || `No ${formatSubject(subject)} class today`}
-              </h3>
-              <p className="text-sm text-gray-500 mb-6">{classInfo?.duration || 'Schedule not announced'}</p>
-
-              <a
-                href={classInfo?.youtube_live_link || '#'}
-                target="_blank"
-                rel="noreferrer"
-                onClick={(event) => {
-                  if (!classInfo?.youtube_live_link) event.preventDefault();
-                }}
-                className={`mt-auto text-center py-3 rounded-xl font-semibold transition ${
-                  classInfo?.youtube_live_link
-                    ? 'bg-indigo-600 text-white hover:bg-indigo-700'
-                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                }`}
-              >
-                {classInfo?.youtube_live_link ? 'Attend Class' : 'Not Scheduled'}
-              </a>
+              {/* Duration and Action */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <Clock className="w-4 h-4" />
+                  <span className="text-xs lg:text-sm">{classInfo?.duration || 'Schedule not announced'}</span>
+                </div>
+                
+                <button
+                  onClick={() => {
+                    if (classInfo?.youtube_live_link) {
+                      window.open(classInfo.youtube_live_link, '_blank');
+                    }
+                  }}
+                  disabled={!classInfo?.youtube_live_link}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors w-full sm:w-auto ${
+                    classInfo?.youtube_live_link
+                      ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  }`}
+                >
+                  {classInfo?.youtube_live_link ? 'Attend Class' : 'Not Scheduled'}
+                </button>
+              </div>
             </div>
           );
         })}
@@ -298,9 +565,31 @@ const MyClassesSection: React.FC = () => {
 
 const RecordedClassesSection: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(getTodayISO());
-  const [recordingsBySubject, setRecordingsBySubject] = useState<Partial<Record<Subject, RecordedClassRow>>>({});
+  const [recordingsBySubject, setRecordingsBySubject] = useState<Record<Subject, RecordedClassRow | null>>({
+    maths: null,
+    physics: null,
+    chemistry: null
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const getSubjectColor = (subject: Subject) => {
+    switch (subject) {
+      case 'maths': return 'bg-blue-100 text-blue-700';
+      case 'physics': return 'bg-green-100 text-green-700';
+      case 'chemistry': return 'bg-orange-100 text-orange-700';
+      default: return 'bg-gray-100 text-gray-700';
+    }
+  };
+
+  const getSubjectIcon = (subject: Subject) => {
+    switch (subject) {
+      case 'maths': return 'M';
+      case 'physics': return 'P';
+      case 'chemistry': return 'C';
+      default: return 'D';
+    }
+  };
 
   useEffect(() => {
     const fetchRecordings = async () => {
@@ -319,7 +608,11 @@ const RecordedClassesSection: React.FC = () => {
         return;
       }
 
-      const mapped: Partial<Record<Subject, RecordedClassRow>> = {};
+      const mapped: Record<Subject, RecordedClassRow | null> = {
+        maths: null,
+        physics: null,
+        chemistry: null
+      };
       (data || []).forEach((row) => {
         if (row.subject === 'maths' || row.subject === 'physics' || row.subject === 'chemistry') {
           mapped[row.subject] = row as RecordedClassRow;
@@ -334,72 +627,97 @@ const RecordedClassesSection: React.FC = () => {
   }, [selectedDate]);
 
   return (
-    <div>
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Recorded Classes</h1>
-          <p className="text-gray-500">Select a date to watch subject-wise recordings.</p>
-        </div>
-        <div>
-          <label className="block text-sm font-semibold text-gray-600 mb-2">Select Date</label>
-          <input
-            type="date"
-            value={selectedDate}
-            onChange={(event) => setSelectedDate(event.target.value)}
-            className="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
-          />
+    <div className="space-y-4 lg:space-y-6">
+      {/* Header with Date Selection */}
+      <div className="bg-white rounded-lg p-4 lg:p-6 shadow-sm">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div>
+            <h2 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">Recorded Classes</h2>
+            <p className="text-sm text-gray-600">Select a date to watch subject-wise recordings.</p>
+          </div>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+            <label className="text-sm font-semibold text-gray-600">Select Date</label>
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(event) => setSelectedDate(event.target.value)}
+              className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none text-sm"
+            />
+          </div>
         </div>
       </div>
 
-      {loading && <p className="text-gray-500">Loading recordings...</p>}
-      {error && <p className="text-red-600 mb-4">Failed to load recordings: {error}</p>}
+      {loading && (
+        <div className="text-center py-8">
+          <p className="text-gray-500">Loading recordings...</p>
+        </div>
+      )}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <p className="text-red-600">Failed to load recordings: {error}</p>
+        </div>
+      )}
 
       {!loading && !error && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
           {SUBJECTS.map((subject) => {
             const recording = recordingsBySubject[subject];
-            const initials = (recording?.teacher_name || formatSubject(subject)).slice(0, 1).toUpperCase();
+            const initials = getSubjectIcon(subject);
+            const subjectColor = getSubjectColor(subject);
 
             return (
-              <div key={subject} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col">
-                <div className="flex items-center gap-3 mb-5">
-                  {recording?.teacher_photo_url ? (
-                    <img
-                      src={recording.teacher_photo_url}
-                      alt={recording.teacher_name}
-                      className="h-12 w-12 rounded-full object-cover"
-                    />
-                  ) : (
-                    <div className="h-12 w-12 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center">
-                      {initials}
+              <div key={subject} className="bg-white rounded-lg p-4 lg:p-6 shadow-sm border border-gray-100">
+                <div className="flex items-start space-x-3 lg:space-x-4 mb-4 lg:mb-6">
+                  {/* Teacher Avatar */}
+                  <div className={`w-12 h-12 lg:w-16 lg:h-16 rounded-full ${subjectColor} flex items-center justify-center font-bold text-white flex-shrink-0`}>
+                    {recording?.teacher_photo_url ? (
+                      <img
+                        src={recording.teacher_photo_url}
+                        alt={recording.teacher_name}
+                        className="w-full h-full rounded-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-lg lg:text-xl">{initials}</span>
+                    )}
+                  </div>
+
+                  {/* Subject and Teacher Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className={`inline-block px-2 py-1 rounded text-xs font-bold uppercase tracking-wide mb-1 lg:mb-2 ${subjectColor}`}>
+                      {formatSubject(subject)}
                     </div>
-                  )}
-                  <div>
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wide">{formatSubject(subject)}</p>
-                    <p className="font-semibold text-gray-900">{recording?.teacher_name || 'Teacher TBD'}</p>
+                    <h3 className="font-semibold text-gray-900 text-sm lg:text-base truncate">
+                      {recording?.teacher_name || 'Teacher TBD'}
+                    </h3>
+                    <p className="text-xs lg:text-sm text-gray-500 line-clamp-2">
+                      {recording?.class_title || `No ${formatSubject(subject)} recording`}
+                    </p>
                   </div>
                 </div>
 
-                <h3 className="font-bold text-lg text-gray-900 mb-2">
-                  {recording?.class_title || `No ${formatSubject(subject)} recording`}
-                </h3>
-                <p className="text-sm text-gray-500 mb-6">{recording?.duration || 'No duration available'}</p>
-
-                <a
-                  href={recording?.youtube_video_link || '#'}
-                  target="_blank"
-                  rel="noreferrer"
-                  onClick={(event) => {
-                    if (!recording?.youtube_video_link) event.preventDefault();
-                  }}
-                  className={`mt-auto text-center py-3 rounded-xl font-semibold transition ${
-                    recording?.youtube_video_link
-                      ? 'bg-indigo-600 text-white hover:bg-indigo-700'
-                      : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  }`}
-                >
-                  {recording?.youtube_video_link ? 'Watch Recording' : 'No Recording'}
-                </a>
+                {/* Duration and Action */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    <Clock className="w-4 h-4" />
+                    <span className="text-xs lg:text-sm">{recording?.duration || 'No duration available'}</span>
+                  </div>
+                  
+                  <button
+                    onClick={() => {
+                      if (recording?.youtube_video_link) {
+                        window.open(recording.youtube_video_link, '_blank');
+                      }
+                    }}
+                    disabled={!recording?.youtube_video_link}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors w-full sm:w-auto ${
+                      recording?.youtube_video_link
+                        ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    }`}
+                  >
+                    {recording?.youtube_video_link ? 'Watch Recording' : 'No Recording'}
+                  </button>
+                </div>
               </div>
             );
           })}
@@ -447,8 +765,8 @@ const DoubtsClassesSection: React.FC<{ hasDoubtsAccess: boolean }> = ({ hasDoubt
 
   if (!hasDoubtsAccess) {
     return (
-      <div className="bg-white border border-orange-100 rounded-2xl p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Restricted Section</h2>
+      <div className="bg-white border border-orange-100 rounded-lg p-6 lg:p-8">
+        <h2 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">Restricted Section</h2>
         <p className="text-gray-600">
           Doubts Classes are available only for batches with doubts access.
         </p>
@@ -456,45 +774,65 @@ const DoubtsClassesSection: React.FC<{ hasDoubtsAccess: boolean }> = ({ hasDoubt
     );
   }
 
-  if (loading) return <p className="text-gray-500">Loading doubts sessions...</p>;
-  if (error) return <p className="text-red-600">Failed to load doubts sessions: {error}</p>;
+  if (loading) return (
+    <div className="text-center py-8">
+      <p className="text-gray-500">Loading doubts sessions...</p>
+    </div>
+  );
+  if (error) return (
+    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+      <p className="text-red-600">Failed to load doubts sessions: {error}</p>
+    </div>
+  );
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">Upcoming Doubts Classes</h1>
-      <p className="text-gray-500 mb-8">Join sessions and clear your doubts with faculty.</p>
+    <div className="space-y-4 lg:space-y-6">
+      {/* Header */}
+      <div className="bg-white rounded-lg p-4 lg:p-6 shadow-sm">
+        <h2 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">Upcoming Doubts Classes</h2>
+        <p className="text-sm text-gray-600">Join sessions and clear your doubts with faculty.</p>
+      </div>
 
       {sessions.length === 0 ? (
-        <div className="bg-white border border-gray-100 rounded-2xl p-8 text-gray-500">
-          No upcoming doubts sessions are scheduled right now.
+        <div className="bg-white border border-gray-100 rounded-lg p-6 lg:p-8 text-center">
+          <p className="text-gray-500">No upcoming doubts sessions are scheduled right now.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
           {sessions.map((session) => (
-            <div key={session.doubts_class_id} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-              <div className="flex justify-between items-start gap-4 mb-4">
-                <div>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wide">
+            <div key={session.doubts_class_id} className="bg-white rounded-lg p-4 lg:p-6 shadow-sm border border-gray-100">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
+                <div className="flex-1">
+                  <div className={`inline-block px-2 py-1 rounded text-xs font-bold uppercase tracking-wide mb-2 ${
+                    session.subject === 'maths' ? 'bg-blue-100 text-blue-700' :
+                    session.subject === 'physics' ? 'bg-green-100 text-green-700' :
+                    session.subject === 'chemistry' ? 'bg-orange-100 text-orange-700' :
+                    'bg-gray-100 text-gray-700'
+                  }`}>
                     {formatSubject(session.subject)}
-                  </p>
-                  <h3 className="text-lg font-bold text-gray-900">{session.class_title}</h3>
+                  </div>
+                  <h3 className="text-base lg:text-lg font-bold text-gray-900 line-clamp-2">{session.class_title}</h3>
                 </div>
-                <span className="text-xs font-semibold px-2 py-1 rounded-full bg-indigo-50 text-indigo-700">
+                <span className="text-xs font-semibold px-2 py-1 rounded-full bg-indigo-50 text-indigo-700 whitespace-nowrap">
                   {new Date(session.date).toLocaleDateString()}
                 </span>
               </div>
 
-              <p className="text-sm text-gray-600 mb-1">Teacher: {session.teacher_name}</p>
-              <p className="text-sm text-gray-600 mb-5">Time: {session.time_slot}</p>
+              <div className="space-y-2 mb-4">
+                <p className="text-sm text-gray-600">Teacher: <span className="font-medium">{session.teacher_name}</span></p>
+                <p className="text-sm text-gray-600">Time: <span className="font-medium">{session.time_slot}</span></p>
+              </div>
 
-              <a
-                href={session.google_meet_link}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-block bg-indigo-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
+              <button
+                onClick={() => {
+                  if (session.google_meet_link) {
+                    window.open(session.google_meet_link, '_blank');
+                  }
+                }}
+                className="w-full sm:w-auto bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
               >
                 Join Doubts Class
-              </a>
+              </button>
             </div>
           ))}
         </div>
@@ -549,62 +887,82 @@ const ProfileSection: React.FC<{ profile: UserProfile }> = ({ profile }) => {
   }, [profile.user_id]);
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Profile</h1>
-        <p className="text-gray-500">Your personal details, batch info and performance stats.</p>
+    <div className="space-y-4 lg:space-y-6">
+      {/* Header */}
+      <div className="bg-white rounded-lg p-4 lg:p-6 shadow-sm">
+        <h2 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">Profile</h2>
+        <p className="text-sm text-gray-600">Your personal details, batch info and performance stats.</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <section className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">Personal Details</h2>
+      {/* Personal and Batch Details */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+        <section className="bg-white rounded-lg p-4 lg:p-6 shadow-sm border border-gray-100">
+          <h3 className="text-base lg:text-lg font-bold text-gray-900 mb-4">Personal Details</h3>
           <div className="space-y-3 text-sm">
-            <p><span className="text-gray-500">Name:</span> <span className="font-semibold text-gray-900">{profile.student_name}</span></p>
-            <p><span className="text-gray-500">Email:</span> <span className="font-semibold text-gray-900">{profile.email}</span></p>
-            <p><span className="text-gray-500">Phone:</span> <span className="font-semibold text-gray-900">{profile.phone}</span></p>
-            <p><span className="text-gray-500">Account Status:</span> <span className="font-semibold text-gray-900 capitalize">{profile.account_status}</span></p>
-            <p><span className="text-gray-500">Joined On:</span> <span className="font-semibold text-gray-900">{new Date(profile.created_at).toLocaleDateString()}</span></p>
+            <div className="flex justify-between">
+              <span className="text-gray-500">Name:</span>
+              <span className="font-semibold text-gray-900 text-right">{profile.student_name}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-500">Email:</span>
+              <span className="font-semibold text-gray-900 text-right truncate max-w-[200px]">{profile.email}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-500">Phone:</span>
+              <span className="font-semibold text-gray-900 text-right">{profile.phone}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-500">Account Status:</span>
+              <span className="font-semibold text-gray-900 capitalize text-right">{profile.account_status}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-500">Joined On:</span>
+              <span className="font-semibold text-gray-900 text-right">{new Date(profile.created_at).toLocaleDateString()}</span>
+            </div>
           </div>
         </section>
 
-        <section className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">Batch Details</h2>
+        <section className="bg-white rounded-lg p-4 lg:p-6 shadow-sm border border-gray-100">
+          <h3 className="text-base lg:text-lg font-bold text-gray-900 mb-4">Batch Details</h3>
           <div className="space-y-3 text-sm">
-            <p>
-              <span className="text-gray-500">Batch Name:</span>{' '}
-              <span className="font-semibold text-gray-900 capitalize">{profile.batches?.batch_name || 'Not assigned'}</span>
-            </p>
-            <p>
-              <span className="text-gray-500">Duration:</span>{' '}
-              <span className="font-semibold text-gray-900">{profile.batches?.duration_months || 0} Months</span>
-            </p>
-            <p>
-              <span className="text-gray-500">Doubts Access:</span>{' '}
-              <span className="font-semibold text-gray-900">
+            <div className="flex justify-between">
+              <span className="text-gray-500">Batch Name:</span>
+              <span className="font-semibold text-gray-900 capitalize text-right">{profile.batches?.batch_name || 'Not assigned'}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-500">Duration:</span>
+              <span className="font-semibold text-gray-900 text-right">{profile.batches?.duration_months || 0} Months</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-500">Doubts Access:</span>
+              <span className="font-semibold text-gray-900 text-right">
                 {profile.batches?.has_doubts_access ? 'Enabled' : 'Not available'}
               </span>
-            </p>
+            </div>
           </div>
         </section>
       </div>
 
-      <section className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">Test Statistics</h2>
+      {/* Test Statistics */}
+      <section className="bg-white rounded-lg p-4 lg:p-6 shadow-sm border border-gray-100">
+        <h3 className="text-base lg:text-lg font-bold text-gray-900 mb-4">Test Statistics</h3>
         {loadingStats ? (
-          <p className="text-gray-500">Loading test statistics...</p>
+          <div className="text-center py-8">
+            <p className="text-gray-500">Loading test statistics...</p>
+          </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-indigo-50 rounded-xl p-4">
-              <p className="text-xs font-bold text-indigo-500 uppercase tracking-wide">Tests Attempted</p>
-              <p className="text-2xl font-bold text-indigo-700 mt-1">{stats.testsAttempted}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="bg-indigo-50 rounded-lg p-4 text-center">
+              <p className="text-xs font-bold text-indigo-500 uppercase tracking-wide mb-2">Tests Attempted</p>
+              <p className="text-2xl lg:text-3xl font-bold text-indigo-700">{stats.testsAttempted}</p>
             </div>
-            <div className="bg-emerald-50 rounded-xl p-4">
-              <p className="text-xs font-bold text-emerald-500 uppercase tracking-wide">Average Score</p>
-              <p className="text-2xl font-bold text-emerald-700 mt-1">{stats.averageScore}</p>
+            <div className="bg-emerald-50 rounded-lg p-4 text-center">
+              <p className="text-xs font-bold text-emerald-500 uppercase tracking-wide mb-2">Average Score</p>
+              <p className="text-2xl lg:text-3xl font-bold text-emerald-700">{stats.averageScore}</p>
             </div>
-            <div className="bg-amber-50 rounded-xl p-4">
-              <p className="text-xs font-bold text-amber-500 uppercase tracking-wide">Average Percentage</p>
-              <p className="text-2xl font-bold text-amber-700 mt-1">{stats.averagePercent}%</p>
+            <div className="bg-amber-50 rounded-lg p-4 text-center">
+              <p className="text-xs font-bold text-amber-500 uppercase tracking-wide mb-2">Average Percentage</p>
+              <p className="text-2xl lg:text-3xl font-bold text-amber-700">{stats.averagePercent}%</p>
             </div>
           </div>
         )}

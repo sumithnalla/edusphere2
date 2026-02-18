@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase';
 import { Batch } from '../types/database';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { BookOpen, BarChart3, Zap, MessageCircle, Check, Star, Users, TrendingUp, Award, ChevronDown, Phone, Mail } from 'lucide-react';
 
 const Landing: React.FC = () => {
   const [batches, setBatches] = useState<Batch[]>([]);
@@ -27,248 +28,470 @@ const Landing: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600" />
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="relative">
+          <div className="w-16 h-16 border-4 border-indigo-200 rounded-full animate-spin border-t-indigo-600"></div>
+          <div className="absolute top-0 left-0 w-16 h-16 border-4 border-transparent rounded-full animate-spin border-b-blue-500"></div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <Navbar />
       
       {/* Hero Section */}
-      <section id="hero" className="py-20 px-4 bg-indigo-600 text-white text-center">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">Master EAMCET with Eduspace</h1>
-          <p className="text-xl opacity-90 mb-10">High-quality live classes, comprehensive tests, and personalized doubt clearing sessions.</p>
-          <a href="#what-we-cover" className="bg-white text-indigo-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition">View Batches</a>
+      <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700"></div>
+        <div className="absolute inset-0 bg-black opacity-10"></div>
+        
+        {/* Animated Background Shapes */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-white opacity-5 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-white opacity-5 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white opacity-5 rounded-full blur-3xl animate-pulse delay-2000"></div>
+        </div>
+
+        {/* Hero Content */}
+        <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+          <div className="space-y-8">
+            {/* Badge */}
+            <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+              <span className="text-white text-sm font-medium">🎯 EAMCET 2026 Preparation</span>
+            </div>
+
+            {/* Main Heading */}
+            <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight">
+              <span className="block mb-2">Master EAMCET</span>
+              <span className="block bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
+                with Edusphere
+              </span>
+            </h1>
+
+            {/* Subheading */}
+            <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
+              Transform your EAMCET preparation with expert-led live classes, 
+              comprehensive test series, and personalized doubt clearing sessions.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <a 
+                href="#what-we-cover" 
+                className="px-8 py-4 bg-white text-indigo-600 rounded-xl font-bold hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-xl"
+              >
+                Explore Programs
+              </a>
+              <a 
+                href="#courses" 
+                className="px-8 py-4 bg-transparent text-white border-2 border-white rounded-xl font-bold hover:bg-white hover:text-indigo-600 transition-all duration-300 transform hover:scale-105"
+              >
+                View Batches
+              </a>
+            </div>
+
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto pt-12">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white">500+</div>
+                <div className="text-blue-200 text-sm">Students Enrolled</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white">95%</div>
+                <div className="text-blue-200 text-sm">Success Rate</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white">4.9★</div>
+                <div className="text-blue-200 text-sm">Student Rating</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <ChevronDown className="w-6 h-6 text-white/50" />
         </div>
       </section>
 
       {/* What We Cover Section */}
-      <section id="what-we-cover" className="py-20 px-4 max-w-7xl mx-auto">
-        <h2 className="text-4xl font-bold text-center mb-4">What We Cover for EAMCET Success</h2>
-        <p className="text-center text-gray-600 mb-16 max-w-3xl mx-auto">Our programs are designed to match the exact pattern, pressure, and expectations of the EAMCET examination.</p>
+      <section id="what-we-cover" className="py-24 px-4 bg-gradient-to-b from-white to-gray-50">
+        <div className="max-w-7xl mx-auto">
+          {/* Section Header */}
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center px-4 py-2 bg-indigo-50 rounded-full mb-6">
+              <span className="text-indigo-600 text-sm font-semibold">📚 Comprehensive Coverage</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              What We Cover for 
+              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> EAMCET Success</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Our programs are designed to match the exact pattern, pressure, and expectations of the EAMCET examination.
+            </p>
+          </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Complete Syllabus Coverage */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-            <div className="flex items-center mb-4">
-              <div className="h-12 w-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
-                <svg className="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C6.5 6.253 1 10.8 1 16.5S6.5 26 12 26s11-4.547 11-10.25S17.5 6.253 12 6.253z" />
-                </svg>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Complete Syllabus Coverage */}
+            <div className="group relative">
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl opacity-0 group-hover:opacity-100 transition duration-300 blur"></div>
+              <div className="relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-8 border border-gray-100 h-full">
+                <div className="flex flex-col items-center text-center">
+                  <div className="h-16 w-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <BookOpen className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">Complete Syllabus</h3>
+                  <ul className="space-y-3 text-gray-600 text-sm">
+                    <li className="flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full mr-2"></div>
+                      Mathematics: Algebra, Calculus & more
+                    </li>
+                    <li className="flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full mr-2"></div>
+                      Physics: Mechanics, Electricity & Modern
+                    </li>
+                    <li className="flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full mr-2"></div>
+                      Chemistry: Physical, Organic & Inorganic
+                    </li>
+                    <li className="flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full mr-2"></div>
+                      Updated as per latest EAMCET syllabus
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <h3 className="text-xl font-bold">Complete Syllabus Coverage</h3>
             </div>
-            <ul className="space-y-2 text-gray-600 text-sm">
-              <li>• Mathematics: Algebra, Calculus, Coordinate Geometry & more</li>
-              <li>• Physics: Mechanics, Electricity, Modern Physics</li>
-              <li>• Chemistry: Physical, Organic & Inorganic</li>
-              <li>• Updated strictly as per latest EAMCET syllabus</li>
-              <li>• We ensure nothing important is left out</li>
-            </ul>
-          </div>
 
-          {/* Smart Test Series & Mock Exams */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-            <div className="flex items-center mb-4">
-              <div className="h-12 w-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
-                <svg className="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
+            {/* Smart Test Series & Mock Exams */}
+            <div className="group relative">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl opacity-0 group-hover:opacity-100 transition duration-300 blur"></div>
+              <div className="relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-8 border border-gray-100 h-full">
+                <div className="flex flex-col items-center text-center">
+                  <div className="h-16 w-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <BarChart3 className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">Smart Test Series</h3>
+                  <ul className="space-y-3 text-gray-600 text-sm">
+                    <li className="flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-purple-600 rounded-full mr-2"></div>
+                      Chapter-wise tests
+                    </li>
+                    <li className="flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-purple-600 rounded-full mr-2"></div>
+                      Weekly performance evaluations
+                    </li>
+                    <li className="flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-purple-600 rounded-full mr-2"></div>
+                      Full-length mock exams
+                    </li>
+                    <li className="flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-purple-600 rounded-full mr-2"></div>
+                      Time-based exam simulation
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <h3 className="text-xl font-bold">Smart Test Series & Mock Exams</h3>
             </div>
-            <ul className="space-y-2 text-gray-600 text-sm">
-              <li>• Chapter-wise tests</li>
-              <li>• Weekly performance evaluations</li>
-              <li>• Full-length EAMCET pattern mock exams</li>
-              <li>• Time-based exam simulation practice</li>
-              <li>• Students don't just learn — they practice like the real exam</li>
-            </ul>
-          </div>
 
-          {/* Smart Rank Strategy System */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-            <div className="flex items-center mb-4">
-              <div className="h-12 w-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
-                <svg className="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
+            {/* Smart Rank Strategy System */}
+            <div className="group relative">
+              <div className="absolute -inset-1 bg-gradient-to-r from-green-600 to-teal-600 rounded-2xl opacity-0 group-hover:opacity-100 transition duration-300 blur"></div>
+              <div className="relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-8 border border-gray-100 h-full">
+                <div className="flex flex-col items-center text-center">
+                  <div className="h-16 w-16 bg-gradient-to-br from-green-500 to-teal-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <Zap className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">Rank Strategy</h3>
+                  <ul className="space-y-3 text-gray-600 text-sm">
+                    <li className="flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-green-600 rounded-full mr-2"></div>
+                      PYQ focused training
+                    </li>
+                    <li className="flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-green-600 rounded-full mr-2"></div>
+                      Shortcut methods & techniques
+                    </li>
+                    <li className="flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-green-600 rounded-full mr-2"></div>
+                      High-weightage topics
+                    </li>
+                    <li className="flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-green-600 rounded-full mr-2"></div>
+                      Exam-day time management
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <h3 className="text-xl font-bold">Smart Rank Strategy System</h3>
             </div>
-            <ul className="space-y-2 text-gray-600 text-sm">
-              <li>• PYQ (Previous Year Questions) focused training</li>
-              <li>• Shortcut methods & time-saving techniques</li>
-              <li>• High-weightage topic prioritization</li>
-              <li>• Exam-day time management strategy</li>
-              <li>• We train you to think like a ranker</li>
-            </ul>
-          </div>
 
-          {/* Doubt Support & Mentorship */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-            <div className="flex items-center mb-4">
-              <div className="h-12 w-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
-                <svg className="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.172l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
+            {/* Doubt Support & Mentorship */}
+            <div className="group relative">
+              <div className="absolute -inset-1 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl opacity-0 group-hover:opacity-100 transition duration-300 blur"></div>
+              <div className="relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-8 border border-gray-100 h-full">
+                <div className="flex flex-col items-center text-center">
+                  <div className="h-16 w-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <MessageCircle className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">Doubt Support</h3>
+                  <ul className="space-y-3 text-gray-600 text-sm">
+                    <li className="flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-orange-600 rounded-full mr-2"></div>
+                      Regular live doubt sessions
+                    </li>
+                    <li className="flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-orange-600 rounded-full mr-2"></div>
+                      Structured study planning
+                    </li>
+                    <li className="flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-orange-600 rounded-full mr-2"></div>
+                      Strategy guidance
+                    </li>
+                    <li className="flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-orange-600 rounded-full mr-2"></div>
+                      Priority support
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <h3 className="text-xl font-bold">Doubt Support & Mentorship</h3>
             </div>
-            <ul className="space-y-2 text-gray-600 text-sm">
-              <li>• Regular live doubt sessions</li>
-              <li>• Structured study planning</li>
-              <li>• Strategy guidance for different preparation levels</li>
-              <li>• Priority support in higher batches</li>
-              <li>• Preparation becomes clear, focused, and stress-free</li>
-            </ul>
           </div>
         </div>
       </section>
 
       {/* Confidence Quote Section */}
-      <section className="py-16 px-4 bg-gradient-to-r from-indigo-50 to-indigo-100">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-2xl md:text-3xl font-bold text-indigo-900 italic">
-            "Even a late start can lead to a top rank — if the effort is relentless."
+      <section className="py-20 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600"></div>
+        <div className="absolute inset-0 bg-black opacity-20"></div>
+        <div className="relative max-w-5xl mx-auto text-center">
+          <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full mb-8">
+            <span className="text-white text-sm font-semibold">💡 Our Philosophy</span>
+          </div>
+          <p className="text-3xl md:text-4xl font-bold text-white leading-relaxed">
+            "Even a late start can lead to a top rank — 
+            <span className="block text-yellow-300 mt-2">if the effort is relentless."</span>
           </p>
+          <div className="mt-8 flex justify-center space-x-4">
+            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-white rounded-full animate-pulse delay-100"></div>
+            <div className="w-2 h-2 bg-white rounded-full animate-pulse delay-200"></div>
+          </div>
         </div>
       </section>
 
       {/* Choose Your Path Section */}
-      <section id="courses" className="py-20 px-4 max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-12">Choose Your Path</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {batches.map((batch) => (
-            <div key={batch.batch_id} className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 transition hover:shadow-xl flex flex-col">
-              <div className="p-8 flex-grow">
-                <div className="flex justify-between items-center mb-4">
-                  <span className="px-3 py-1 bg-indigo-100 text-indigo-600 text-xs font-bold uppercase rounded-full tracking-wider">
-                    {batch.duration_months} Months
-                  </span>
-                  <span className="text-2xl font-bold">₹{batch.cost}</span>
-                </div>
-                <h3 className="text-2xl font-bold mb-4 capitalize">{batch.batch_name} Batch</h3>
-                <ul className="space-y-3">
-                  {batch.features.split(',').map((feature, idx) => (
-                    <li key={idx} className="flex items-start text-gray-600">
-                      <svg className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                      </svg>
-                      {feature.trim()}
-                    </li>
-                  ))}
-                  {batch.has_doubts_access && (
-                    <li className="flex items-start text-gray-600">
-                      <svg className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                      </svg>
-                      Exclusive Doubt Support
-                    </li>
-                  )}
-                </ul>
-              </div>
-              <div className="p-8 bg-gray-50 border-t">
-                <button 
-                  onClick={() => navigate(`/payment?batch_id=${batch.batch_id}`)}
-                  className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition"
-                >
-                  Buy Now
-                </button>
-              </div>
+      <section id="courses" className="py-24 px-4 bg-gradient-to-b from-gray-50 to-white">
+        <div className="max-w-7xl mx-auto">
+          {/* Section Header */}
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center px-4 py-2 bg-indigo-50 rounded-full mb-6">
+              <span className="text-indigo-600 text-sm font-semibold">🎯 Choose Your Path</span>
             </div>
-          ))}
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Select Your 
+              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> Preparation Batch</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Choose the batch that matches your preparation level and timeline. 
+              All batches include comprehensive study materials and expert guidance.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {batches.map((batch, index) => (
+              <div key={batch.batch_id} className="group relative">
+                {/* Popular Badge for First Batch */}
+                {index === 0 && (
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
+                    <div className="px-4 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-sm font-bold rounded-full shadow-lg">
+                      🔥 Most Popular
+                    </div>
+                  </div>
+                )}
+                
+                <div className="relative bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 flex flex-col h-full">
+                  {/* Gradient Border Effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
+                  
+                  <div className="relative bg-white rounded-3xl m-1 flex flex-col h-full">
+                    {/* Header */}
+                    <div className="relative p-8 pb-6">
+                      <div className="flex justify-between items-start mb-6">
+                        <div className="flex items-center space-x-3">
+                          <div className="px-3 py-1 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs font-bold uppercase rounded-full tracking-wider">
+                            {batch.duration_months} Months
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-3xl font-bold text-gray-900">₹{batch.cost}</div>
+                          <div className="text-sm text-gray-500">one-time</div>
+                        </div>
+                      </div>
+                      
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2 capitalize">
+                        {batch.batch_name} Batch
+                      </h3>
+                      <p className="text-gray-600 text-sm">
+                        Perfect for students looking for {batch.duration_months === 6 ? 'comprehensive' : batch.duration_months === 3 ? 'intensive' : 'quick'} preparation
+                      </p>
+                    </div>
+
+                    {/* Features */}
+                    <div className="px-8 pb-6 flex-grow">
+                      <ul className="space-y-3">
+                        {batch.features.split(',').map((feature, idx) => (
+                          <li key={idx} className="flex items-start text-gray-700">
+                            <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                              <Check className="w-3 h-3 text-green-600" />
+                            </div>
+                            <span className="text-sm">{feature.trim()}</span>
+                          </li>
+                        ))}
+                        {batch.has_doubts_access && (
+                          <li className="flex items-start text-gray-700">
+                            <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                              <Check className="w-3 h-3 text-green-600" />
+                            </div>
+                            <span className="text-sm font-semibold text-green-600">Exclusive Doubt Support</span>
+                          </li>
+                        )}
+                      </ul>
+                    </div>
+
+                    {/* CTA */}
+                    <div className="p-8 pt-0">
+                      <button 
+                        onClick={() => navigate(`/payment?batch_id=${batch.batch_id}`)}
+                        className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                      >
+                        Enroll Now
+                      </button>
+                      <p className="text-center text-xs text-gray-500 mt-3">
+                        Instant access after payment
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* FAQ + Contact Section */}
-      <section  id="contact" className="py-20 px-4 bg-gray-100">
+      <section  id="contact" className="py-24 px-4 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center px-4 py-2 bg-indigo-50 rounded-full mb-6">
+              <span className="text-indigo-600 text-sm font-semibold">💬 Get in Touch</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Have 
+              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> Questions?</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              We're here to help you choose the perfect batch for your EAMCET preparation journey.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Card */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-              <h3 className="text-2xl font-bold mb-6">Need Help Choosing a Batch?</h3>
-              <p className="text-gray-600 mb-8">Choosing the right batch depends on your preparation level and goals. Our team is here to guide you.</p>
+            <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
+              <div className="flex items-center mb-8">
+                <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mr-4">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900">Need Help Choosing?</h3>
+              </div>
+              <p className="text-gray-600 mb-8 leading-relaxed">
+                Choosing the right batch depends on your preparation level and goals. Our expert team is here to guide you every step of the way.
+              </p>
               
               <div className="space-y-6 mb-8">
-                <div className="flex items-center">
-                  <svg className="h-6 w-6 text-indigo-600 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                  <a href="tel:+919390095383" className="text-indigo-600 font-semibold hover:underline">+91 93900 95383</a>
+                <div className="flex items-center space-x-4 p-4 bg-indigo-50 rounded-xl">
+                  <div className="w-10 h-10 bg-indigo-600/20 border border-indigo-600/30 rounded-lg flex items-center justify-center">
+                    <Phone className="w-5 h-5 text-indigo-600" />
+                  </div>
+                  <div>
+                    <a href="tel:+919390095383" className="text-indigo-600 font-semibold hover:text-indigo-700 transition-colors">
+                      +91 93900 95383
+                    </a>
+                  </div>
                 </div>
-                <div className="flex items-center">
-                  <svg className="h-6 w-6 text-indigo-600 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  <a href="mailto:srirajperugu11@gmail.com" className="text-indigo-600 font-semibold hover:underline">srirajperugu11@gmail.com</a>
+                <div className="flex items-center space-x-4 p-4 bg-indigo-50 rounded-xl">
+                  <div className="w-10 h-10 bg-indigo-600/20 border border-indigo-600/30 rounded-lg flex items-center justify-center">
+                    <Mail className="w-5 h-5 text-indigo-600" />
+                  </div>
+                  <div>
+                    <a href="mailto:srirajperugu11@gmail.com" className="text-indigo-600 font-semibold hover:text-indigo-700 transition-colors">
+                      srirajperugu11@gmail.com
+                    </a>
+                  </div>
                 </div>
               </div>
 
-              <button className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition">
-                Contact Us
+              <button className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                Contact Our Team
               </button>
             </div>
 
             {/* FAQ Accordion */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-              <h3 className="text-2xl font-bold mb-8">Frequently Asked Questions</h3>
+            <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
+              <div className="flex items-center mb-8">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mr-4">
+                  <MessageCircle className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900">Frequently Asked Questions</h3>
+              </div>
               
               <div className="space-y-4">
                 {/* FAQ Item 1 */}
-                <div className="border-b border-gray-300">
+                <div className="border-b border-gray-200">
                   <button
                     onClick={() => setExpandedFAQ(expandedFAQ === 0 ? null : 0)}
-                    className="w-full py-4 flex justify-between items-center hover:bg-gray-50 px-2 transition"
+                    className="w-full py-4 flex justify-between items-center hover:bg-gray-50 px-2 transition group"
                   >
                     <span className="font-semibold text-gray-800">When will the batches start?</span>
-                    <svg className={`h-5 w-5 text-indigo-600 transition transform ${expandedFAQ === 0 ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                    </svg>
+                    <ChevronDown className={`w-5 h-5 text-indigo-600 transition-all duration-300 ${expandedFAQ === 0 ? 'rotate-180' : ''}`} />
                   </button>
                   {expandedFAQ === 0 && (
-                    <div className="px-2 pb-4 text-gray-600 text-sm">
+                    <div className="px-2 pb-4 text-gray-600 text-sm leading-relaxed">
                       The batches are scheduled to begin right after the Second Year Intermediate exams conclude (around 25th March). This timing is planned strategically so students can shift their complete focus to EAMCET preparation at the most crucial phase.
                     </div>
                   )}
                 </div>
 
                 {/* FAQ Item 2 */}
-                <div className="border-b border-gray-300">
+                <div className="border-b border-gray-200">
                   <button
                     onClick={() => setExpandedFAQ(expandedFAQ === 1 ? null : 1)}
-                    className="w-full py-4 flex justify-between items-center hover:bg-gray-50 px-2 transition"
+                    className="w-full py-4 flex justify-between items-center hover:bg-gray-50 px-2 transition group"
                   >
                     <span className="font-semibold text-gray-800">Can I upgrade my batch later?</span>
-                    <svg className={`h-5 w-5 text-indigo-600 transition transform ${expandedFAQ === 1 ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                    </svg>
+                    <ChevronDown className={`w-5 h-5 text-indigo-600 transition-all duration-300 ${expandedFAQ === 1 ? 'rotate-180' : ''}`} />
                   </button>
                   {expandedFAQ === 1 && (
-                    <div className="px-2 pb-4 text-gray-600 text-sm">
-                      Yes. You can upgrade to a higher batch by paying the difference amount. Contact support and we will assist you.
+                    <div className="px-2 pb-4 text-gray-600 text-sm leading-relaxed">
+                      Yes. You can upgrade to a higher batch by paying the difference amount. Contact our support team and we will assist you with the upgrade process.
                     </div>
                   )}
                 </div>
 
                 {/* FAQ Item 3 */}
-                <div className="border-b border-gray-300">
+                <div className="border-b border-gray-200">
                   <button
                     onClick={() => setExpandedFAQ(expandedFAQ === 2 ? null : 2)}
-                    className="w-full py-4 flex justify-between items-center hover:bg-gray-50 px-2 transition"
+                    className="w-full py-4 flex justify-between items-center hover:bg-gray-50 px-2 transition group"
                   >
                     <span className="font-semibold text-gray-800">Will I get access to recordings if I miss a live class?</span>
-                    <svg className={`h-5 w-5 text-indigo-600 transition transform ${expandedFAQ === 2 ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                    </svg>
+                    <ChevronDown className={`w-5 h-5 text-indigo-600 transition-all duration-300 ${expandedFAQ === 2 ? 'rotate-180' : ''}`} />
                   </button>
                   {expandedFAQ === 2 && (
-                    <div className="px-2 pb-4 text-gray-600 text-sm">
-                      Yes. All batches include access to class recordings, so you can revise anytime at your convenience.
+                    <div className="px-2 pb-4 text-gray-600 text-sm leading-relaxed">
+                      Yes. All batches include access to class recordings, so you can revise anytime at your convenience. Never miss out on important concepts!
                     </div>
                   )}
                 </div>
