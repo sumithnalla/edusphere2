@@ -1,0 +1,148 @@
+Section 1:What We Cover for EAMCET Success
+Short Intro Line:
+Our programs are designed to match the exact pattern, pressure, and expectations of the EAMCET examination.
+Complete Syllabus Coverage
+Mathematics: Algebra, Calculus, Coordinate Geometry & more
+
+
+Physics: Mechanics, Electricity, Modern Physics
+
+
+Chemistry: Physical, Organic & Inorganic
+
+
+Updated strictly as per latest EAMCET syllabus
+
+
+We ensure nothing important is left out.
+Smart Test Series & Mock Exams
+Chapter-wise tests
+
+
+Weekly performance evaluations
+
+
+Full-length EAMCET pattern mock exams
+
+
+Time-based exam simulation practice
+
+
+Students don’t just learn — they practice like the real exam.
+Smart Rank Strategy System
+PYQ (Previous Year Questions) focused training
+
+
+Shortcut methods & time-saving techniques
+
+
+High-weightage topic prioritization
+
+
+Exam-day time management strategy
+
+
+We train you to think like a ranker.
+Doubt Support & Mentorship
+Regular live doubt sessions
+
+
+Structured study planning
+
+
+Strategy guidance for different preparation levels
+
+
+Priority support in higher batches
+
+
+Preparation becomes clear, focused, and stress-free.
+Confidence Quote Section(below what we follow)
+
+
+You can place one of these as a highlighted line:
+“Even a late start can lead to a top rank — if the effort is relentless.”
+(Use bigger font + subtle highlight background.)
+SECTION 2: FAQ + CONTACT (Combined Section)
+Layout:
+ Left → Contact
+ Right → FAQs (Accordion Style)
+LEFT SIDE — CONTACT BLOCK
+Need Help Choosing a Batch?
+Choosing the right batch depends on your preparation level and goals. Our team is here to guide you.
+ Phone: +91 93900 95383
+  Email: srirajperugu11@gmail.com
+RIGHT SIDE — FREQUENTLY ASKED QUESTIONS
+
+ Can I upgrade my batch later?
+Yes. You can upgrade to a higher batch by paying the difference amount. Contact support and we will assist you.
+Will I get access to recordings if I miss a live class?
+Answer:
+ Yes. All batches include access to class recordings, so you can revise anytime at your convenience.
+When will the batches start?
+
+The batches are scheduled to begin right after the Second Year Intermediate exams conclude (around 25th March). This timing is planned strategically so students can shift their complete focus to EAMCET preparation at the most crucial phase.
+
+
+What We Cover Section
+
+Add a new section below Hero.
+
+It should contain:
+
+Section title: “What We Cover for EAMCET Success”
+
+Short intro paragraph
+
+4 feature blocks in grid layout:
+
+Complete Syllabus Coverage
+
+Smart Test Series & Mock Exams
+
+Smart Rank Strategy System
+
+Doubt Support & Mentorship
+
+Use same Tailwind styling pattern as your batch cards:
+
+Confidence Quote Section
+
+Add a small centered section below “What We Cover”.
+
+
+FAQ + Contact Section
+
+Add a new section below the batch cards.
+
+Layout:
+
+Two-column grid (md:grid-cols-2)
+
+Left side: Contact card
+
+Right side: FAQ accordion
+
+Left side content:
+
+Title: Need Help Choosing a Batch?
+
+Phone: +91 93900 95383
+
+Email: srirajperugu11@gmail.com
+
+Simple button
+
+Right side:
+
+Accordion with arrow icon
+
+3 FAQs:
+
+When will the batches start?
+
+Can I upgrade my batch later?
+
+Will I get access to recordings?
+
+Use border-bottom style for each FAQ item.
