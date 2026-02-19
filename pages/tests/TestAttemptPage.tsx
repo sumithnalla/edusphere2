@@ -271,18 +271,33 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId }) => {
     });
 
     console.log('Edge Function response:', { data, submitError });
-    console.log('Data structure:', JSON.stringify(data, null, 2));
-    console.log('Success check:', data?.success);
+    console.log('Raw data type:', typeof data);
+    console.log('Raw data:', data);
+
+    // Parse response if it's a string
+    let parsedData = data;
+    if (typeof data === 'string') {
+      try {
+        parsedData = JSON.parse(data);
+        console.log('Parsed data:', parsedData);
+      } catch (parseError) {
+        console.error('Failed to parse response:', parseError);
+        parsedData = { success: false, error: 'Invalid response format' };
+      }
+    }
+
+    console.log('Final parsed data:', parsedData);
+    console.log('Success check:', parsedData?.success);
 
     // Handle successful response
-    if (!submitError && (data?.success === true || data?.data?.success === true)) {
+    if (!submitError && parsedData?.success === true) {
       console.log('Test submission successful, navigating to results');
       navigate(`/dashboard/test/${examIdNum}/result`);
       return;
     }
 
     // Handle error response
-    let submitMessage = 'Failed to submit test.';
+    let submitMessage = parsedData?.error || 'Failed to submit test.';
     
     if (submitError) {
       console.log('Submit error occurred:', submitError);
@@ -303,10 +318,6 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId }) => {
           submitMessage = bodyText || submitMessage;
         }
       }
-    } else if (data?.error) {
-      submitMessage = data.error;
-    } else if (data?.data?.error) {
-      submitMessage = data.data.error;
     }
 
     setSubmitting(false);
