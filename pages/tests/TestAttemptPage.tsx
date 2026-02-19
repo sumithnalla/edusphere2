@@ -46,6 +46,7 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId }) => {
   const [timeLeft, setTimeLeft] = useState(0);
   const [startedAt, setStartedAt] = useState('');
   const [loading, setLoading] = useState(true);
+  const [authReady, setAuthReady] = useState(false);
   const [saving, setSaving] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -55,8 +56,43 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId }) => {
 
   const examIdNum = useMemo(() => Number(examId), [examId]);
 
+  // Listen for auth state changes to ensure session is ready
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth state changed:', event, session ? 'Session exists' : 'No session');
+      
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        setAuthReady(true);
+      } else if (event === 'INITIAL_SESSION') {
+        // Initial session is loaded from storage
+        setAuthReady(true);
+      } else if (event === 'SIGNED_OUT') {
+        setAuthReady(false);
+        navigate('/login');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
   useEffect(() => {
     const fetchExamData = async () => {
+      // Wait for auth to be ready before proceeding
+      if (!authReady) {
+        console.log('Waiting for auth to be ready...');
+        return;
+      }
+
+      // Check authentication first
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (!session || sessionError) {
+        setError('Authentication required. Please log in again.');
+        setLoading(false);
+        // Redirect to login after a short delay
+        setTimeout(() => navigate('/login'), 2000);
+        return;
+      }
+
       if (!examId || Number.isNaN(examIdNum)) {
         setError('Invalid exam id.');
         setLoading(false);
@@ -122,7 +158,7 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId }) => {
     };
 
     fetchExamData();
-  }, [examId, examIdNum, userId]);
+  }, [examId, examIdNum, userId, authReady, navigate]);
 
   useEffect(() => {
     if (loading || submitting) return;
@@ -190,10 +226,29 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId }) => {
   const handleSubmit = async (autoSubmitted = false) => {
     if (submitting || hasSubmittedRef.current) return;
 
+    // Wait for auth to be ready before proceeding
+    if (!authReady) {
+      setError('Authentication system is still loading. Please wait a moment and try again.');
+      return;
+    }
+
     if (!autoSubmitted) {
       const confirmed = window.confirm('Submit test now? You can retake later if needed.');
       if (!confirmed) return;
     }
+
+    // Check if user has active session before invoking Edge Function
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    if (!session || sessionError) {
+      setError('Authentication required. Please log in again.');
+      setSubmitting(false);
+      hasSubmittedRef.current = false;
+      // Redirect to login after a short delay
+      setTimeout(() => navigate('/login'), 2000);
+      return;
+    }
+
+    console.log('Session confirmed, submitting test with JWT:', session.access_token ? 'JWT present' : 'JWT missing');
 
     hasSubmittedRef.current = true;
     setSubmitting(true);
@@ -204,6 +259,9 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId }) => {
     }));
 
     const { data, error: submitError } = await supabase.functions.invoke('submit-test', {
+      headers: {
+        Authorization: `Bearer ${session.access_token}`
+      },
       body: {
         user_id: userId,
         exam_id: examIdNum,
@@ -212,34 +270,49 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId }) => {
       },
     });
 
-    if (submitError || !data?.success) {
-      let submitMessage = data?.error || submitError?.message || 'Failed to submit test.';
+    console.log('Edge Function response:', { data, submitError });
+    console.log('Data structure:', JSON.stringify(data, null, 2));
+    console.log('Success check:', data?.success);
 
-      if (submitError) {
-        const anyErr: any = submitError;
-        const bodyText =
-          anyErr?.context?.body ||
-          anyErr?.context?.response?.body ||
-          anyErr?.body ||
-          null;
-
-        if (typeof bodyText === 'string') {
-          try {
-            const parsed = JSON.parse(bodyText);
-            submitMessage = parsed?.error || submitMessage;
-          } catch {
-            submitMessage = bodyText || submitMessage;
-          }
-        }
-      }
-
-      setSubmitting(false);
-      hasSubmittedRef.current = false;
-      setError(submitMessage);
+    // Handle successful response
+    if (!submitError && (data?.success === true || data?.data?.success === true)) {
+      console.log('Test submission successful, navigating to results');
+      navigate(`/dashboard/test/${examIdNum}/result`);
       return;
     }
 
-    navigate(`/dashboard/test/${examIdNum}/result`);
+    // Handle error response
+    let submitMessage = 'Failed to submit test.';
+    
+    if (submitError) {
+      console.log('Submit error occurred:', submitError);
+      submitMessage = submitError?.message || submitMessage;
+      
+      const anyErr: any = submitError;
+      const bodyText =
+        anyErr?.context?.body ||
+        anyErr?.context?.response?.body ||
+        anyErr?.body ||
+        null;
+
+      if (typeof bodyText === 'string') {
+        try {
+          const parsed = JSON.parse(bodyText);
+          submitMessage = parsed?.error || submitMessage;
+        } catch {
+          submitMessage = bodyText || submitMessage;
+        }
+      }
+    } else if (data?.error) {
+      submitMessage = data.error;
+    } else if (data?.data?.error) {
+      submitMessage = data.data.error;
+    }
+
+    setSubmitting(false);
+    hasSubmittedRef.current = false;
+    setError(submitMessage);
+    return;
   };
 
   useEffect(() => {
@@ -248,7 +321,7 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId }) => {
     handleSubmit(true);
   }, [loading, submitting, timeLeft]);
 
-  if (loading) return <p className="text-gray-500">Loading test...</p>;
+  if (loading || !authReady) return <p className="text-gray-500">Loading test...</p>;
   if (error) {
     return (
       <div className="bg-white p-8 rounded-2xl border border-red-100">
