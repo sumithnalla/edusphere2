@@ -209,6 +209,7 @@ const TestResultPage: React.FC<TestResultPageProps> = ({ userId }) => {
         <div className="mt-6 flex flex-wrap gap-3">
           <Link
             to={`/dashboard/test/${exam.exam_id}/attempt`}
+            state={{ isRetake: true }}
             className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
           >
             Retake Test

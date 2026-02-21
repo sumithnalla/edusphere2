@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 
 type Option = 'A' | 'B' | 'C' | 'D';
@@ -30,13 +30,19 @@ interface ResponseRow {
 
 interface TestAttemptPageProps {
   userId: string;
+  isRetake?: boolean;
 }
 
 const OPTIONS: Option[] = ['A', 'B', 'C', 'D'];
 
-const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId }) => {
+const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId, isRetake = false }) => {
   const { examId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Get retake flag from location state or props
+  const isRetakeFromState = location.state?.isRetake || false;
+  const actualIsRetake = isRetake || isRetakeFromState;
 
   const [exam, setExam] = useState<ExamRow | null>(null);
   const [questions, setQuestions] = useState<QuestionRow[]>([]);
@@ -49,6 +55,8 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId }) => {
   const [authReady, setAuthReady] = useState(false);
   const [saving, setSaving] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
+  const [autoSubmitCountdown, setAutoSubmitCountdown] = useState<number | null>(null);
   const [error, setError] = useState('');
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
 
@@ -128,30 +136,41 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId }) => {
       const questionRows = questionsData as QuestionRow[];
       const questionIds = questionRows.map((q) => q.question_id);
 
-      const { data: previousResponses, error: responsesError } = await supabase
-        .from('student_responses')
-        .select('question_id, selected_option')
-        .eq('user_id', userId)
-        .in('question_id', questionIds);
+      // Skip fetching previous responses if this is a retake
+      if (!actualIsRetake) {
+        const { data: previousResponses, error: responsesError } = await supabase
+          .from('student_responses')
+          .select('question_id, selected_option')
+          .eq('user_id', userId)
+          .in('question_id', questionIds);
 
-      if (responsesError) {
-        setError(responsesError.message);
-        setLoading(false);
-        return;
+        if (responsesError) {
+          setError(responsesError.message);
+          setLoading(false);
+          return;
+        }
+
+        const initialAnswers: Record<number, Option | null> = {};
+        questionRows.forEach((q) => {
+          initialAnswers[q.question_id] = null;
+        });
+
+        (previousResponses as ResponseRow[] | null)?.forEach((res) => {
+          initialAnswers[res.question_id] = res.selected_option;
+        });
+
+        setAnswers(initialAnswers);
+      } else {
+        // For retake, initialize all answers as null
+        const initialAnswers: Record<number, Option | null> = {};
+        questionRows.forEach((q) => {
+          initialAnswers[q.question_id] = null;
+        });
+        setAnswers(initialAnswers);
       }
-
-      const initialAnswers: Record<number, Option | null> = {};
-      questionRows.forEach((q) => {
-        initialAnswers[q.question_id] = null;
-      });
-
-      (previousResponses as ResponseRow[] | null)?.forEach((res) => {
-        initialAnswers[res.question_id] = res.selected_option;
-      });
 
       setExam(examData as ExamRow);
       setQuestions(questionRows);
-      setAnswers(initialAnswers);
       setStartedAt(new Date().toISOString());
       setTimeLeft((examData.duration_minutes || 180) * 60);
       setLoading(false);
@@ -187,6 +206,24 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId }) => {
     }
 
     setLastSavedAt(new Date().toLocaleTimeString());
+  };
+
+  const clearResponse = async (questionId: number) => {
+    setAnswers((prev) => ({
+      ...prev,
+      [questionId]: null,
+    }));
+    await saveSingleAnswer(questionId, null);
+  };
+
+  const saveAndNext = async () => {
+    const currentQ = questions[currentIndex];
+    if (currentQ && answers[currentQ.question_id]) {
+      await saveSingleAnswer(currentQ.question_id, answers[currentQ.question_id]);
+    }
+    if (currentIndex < questions.length - 1) {
+      setCurrentIndex((prev) => prev + 1);
+    }
   };
 
   const saveAllAnswers = async () => {
@@ -233,9 +270,18 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId }) => {
     }
 
     if (!autoSubmitted) {
-      const confirmed = window.confirm('Submit test now? You can retake later if needed.');
-      if (!confirmed) return;
+      setShowSubmitModal(true);
+      return;
     }
+
+    // For auto-submit, show modal with countdown
+    setShowSubmitModal(true);
+    setAutoSubmitCountdown(10);
+  };
+
+  const confirmSubmit = async () => {
+    setShowSubmitModal(false);
+    setAutoSubmitCountdown(null);
 
     // Check if user has active session before invoking Edge Function
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
@@ -332,6 +378,21 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId }) => {
     handleSubmit(true);
   }, [loading, submitting, timeLeft]);
 
+  // Handle auto-submit countdown
+  useEffect(() => {
+    if (autoSubmitCountdown === null) return;
+
+    const timer = setTimeout(() => {
+      if (autoSubmitCountdown && autoSubmitCountdown > 1) {
+        setAutoSubmitCountdown(prev => prev! - 1);
+      } else {
+        confirmSubmit();
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [autoSubmitCountdown]);
+
   if (loading || !authReady) return <p className="text-gray-500">Loading test...</p>;
   if (error) {
     return (
@@ -387,7 +448,7 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId }) => {
       <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr] gap-6">
         <aside className="bg-white rounded-2xl border border-gray-100 p-4">
           <h2 className="font-bold text-gray-900 mb-4">Question Navigator</h2>
-          <div className="grid grid-cols-8 gap-2">
+          <div className="grid grid-cols-8 gap-2 mb-4">
             {questions.map((question, index) => {
               const isCurrent = index === currentIndex;
               const isAnswered = Boolean(answers[question.question_id]);
@@ -409,6 +470,29 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId }) => {
               );
             })}
           </div>
+          
+          {/* Question Status Legend */}
+          <div className="border-t border-gray-200 pt-4">
+            <h3 className="text-sm font-semibold text-gray-700 mb-2">Status Legend</h3>
+            <div className="space-y-2 text-xs">
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-indigo-600 rounded"></div>
+                <span className="text-gray-600">Current</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-green-100 border border-green-300 rounded"></div>
+                <span className="text-gray-600">Answered</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-amber-100 border border-amber-300 rounded"></div>
+                <span className="text-gray-600">Marked for Review</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-gray-100 border border-gray-300 rounded"></div>
+                <span className="text-gray-600">Not Visited</span>
+              </div>
+            </div>
+          </div>
         </aside>
 
         <section className="bg-white rounded-2xl border border-gray-100 p-6">
@@ -419,21 +503,31 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId }) => {
               </p>
               <h3 className="text-lg font-semibold text-gray-900 mt-1">{currentQuestion.question_text}</h3>
             </div>
-            <button
-              onClick={() =>
-                setMarked((prev) => ({
-                  ...prev,
-                  [currentQuestion.question_id]: !prev[currentQuestion.question_id],
-                }))
-              }
-              className={`px-3 py-2 rounded-lg text-sm font-semibold ${
-                marked[currentQuestion.question_id]
-                  ? 'bg-amber-100 text-amber-700'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              {marked[currentQuestion.question_id] ? 'Marked' : 'Mark for Review'}
-            </button>
+            <div className="flex gap-2">
+              {answers[currentQuestion.question_id] && (
+                <button
+                  onClick={() => clearResponse(currentQuestion.question_id)}
+                  className="px-3 py-2 rounded-lg text-sm font-semibold bg-red-100 text-red-700 hover:bg-red-200"
+                >
+                  Clear Response
+                </button>
+              )}
+              <button
+                onClick={() =>
+                  setMarked((prev) => ({
+                    ...prev,
+                    [currentQuestion.question_id]: !prev[currentQuestion.question_id],
+                  }))
+                }
+                className={`px-3 py-2 rounded-lg text-sm font-semibold ${
+                  marked[currentQuestion.question_id]
+                    ? 'bg-amber-100 text-amber-700'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                {marked[currentQuestion.question_id] ? 'Marked' : 'Mark for Review'}
+              </button>
+            </div>
           </div>
 
           <div className="space-y-3">
@@ -473,10 +567,10 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId }) => {
               </button>
               <button
                 disabled={currentIndex === questions.length - 1}
-                onClick={() => setCurrentIndex((prev) => Math.min(prev + 1, questions.length - 1))}
-                className="px-4 py-2 rounded-lg bg-gray-100 text-gray-800 font-semibold disabled:opacity-50"
+                onClick={saveAndNext}
+                className="px-4 py-2 rounded-lg bg-indigo-600 text-white font-semibold disabled:opacity-60 hover:bg-indigo-700"
               >
-                Next
+                Save & Next
               </button>
             </div>
 
@@ -490,6 +584,61 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId }) => {
           </div>
         </section>
       </div>
+
+      {/* Submit Confirmation Modal */}
+      {showSubmitModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">
+              {autoSubmitCountdown !== null ? 'Time Up - Auto Submitting' : 'Submit Test'}
+            </h3>
+            
+            <div className="space-y-2 mb-6">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Answered:</span>
+                <span className="font-semibold text-green-600">{answeredCount}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Not Answered:</span>
+                <span className="font-semibold text-red-600">{questions.length - answeredCount}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Marked for Review:</span>
+                <span className="font-semibold text-amber-600">{Object.values(marked).filter(Boolean).length}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Total:</span>
+                <span className="font-semibold">{questions.length}</span>
+              </div>
+            </div>
+
+            {autoSubmitCountdown !== null && (
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
+                <p className="text-amber-800 text-center">
+                  Auto-submitting in <span className="font-bold">{autoSubmitCountdown}</span> seconds...
+                </p>
+              </div>
+            )}
+
+            <div className="flex gap-3">
+              {autoSubmitCountdown === null && (
+                <button
+                  onClick={() => setShowSubmitModal(false)}
+                  className="flex-1 px-4 py-2 rounded-lg bg-gray-100 text-gray-800 font-semibold hover:bg-gray-200"
+                >
+                  Cancel
+                </button>
+              )}
+              <button
+                onClick={confirmSubmit}
+                className="flex-1 px-4 py-2 rounded-lg bg-indigo-600 text-white font-bold hover:bg-indigo-700"
+              >
+                {autoSubmitCountdown !== null ? 'Submit Now' : 'Submit Test'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -116,6 +116,125 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
+      {/* Choose Your Path Section */}
+      <section id="courses" className="py-24 px-4 bg-gradient-to-b from-gray-50 to-white">
+        <div className="max-w-7xl mx-auto">
+          {/* Section Header */}
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center px-4 py-2 bg-indigo-50 rounded-full mb-6">
+              <span className="text-indigo-600 text-sm font-semibold">🎯 Choose Your Path</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Select Your 
+              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> Preparation Batch</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Choose the batch that matches your preparation level and timeline. 
+              All batches include comprehensive study materials and expert guidance.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {batches.map((batch, index) => (
+              <div key={batch.batch_id} className="group relative">
+                {/* Popular Badge for First Batch */}
+                {index === 0 && (
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
+                    <div className="px-4 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-sm font-bold rounded-full shadow-lg">
+                       Most Popular
+                    </div>
+                  </div>
+                )}
+                
+                <div className="relative bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 flex flex-col h-full">
+                  {/* Gradient Border Effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
+                  
+                  <div className="relative bg-white rounded-3xl m-1 flex flex-col h-full">
+                    {/* Header */}
+                    <div className="relative p-8 pb-6">
+                      <div className="flex justify-between items-start mb-6">
+                        <div className="flex items-center space-x-3">
+                          <div className="px-3 py-1 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs font-bold uppercase rounded-full tracking-wider">
+                            {batch.duration_months} Months
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-3xl font-bold text-gray-900">₹{batch.cost}</div>
+                          <div className="text-sm text-gray-500">one-time</div>
+                        </div>
+                      </div>
+                      
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2 capitalize">
+                        {batch.batch_name} Batch
+                      </h3>
+                      <p className="text-gray-600 text-sm">
+                        Perfect for students looking for {batch.duration_months === 6 ? 'comprehensive' : batch.duration_months === 3 ? 'intensive' : 'quick'} preparation
+                      </p>
+                    </div>
+
+                    {/* Features */}
+                    <div className="px-8 pb-6 flex-grow">
+                      <ul className="space-y-3">
+                        {batch.features.split(',').map((feature, idx) => (
+                          <li key={idx} className="flex items-start text-gray-700">
+                            <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                              <Check className="w-3 h-3 text-green-600" />
+                            </div>
+                            <span className="text-sm">{feature.trim()}</span>
+                          </li>
+                        ))}
+                        {batch.has_doubts_access && (
+                          <li className="flex items-start text-gray-700">
+                            <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                              <Check className="w-3 h-3 text-green-600" />
+                            </div>
+                            <span className="text-sm font-semibold text-green-600">Exclusive Doubt Support</span>
+                          </li>
+                        )}
+                      </ul>
+                    </div>
+
+                    {/* CTA */}
+                    <div className="p-8 pt-0">
+                      <button 
+                        onClick={() => navigate(`/payment?batch_id=${batch.batch_id}`)}
+                        className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                      >
+                        Enroll Now
+                      </button>
+                      <p className="text-center text-xs text-gray-500 mt-3">
+                        Instant access after payment
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Confidence Quote Section */}
+      <section className="py-20 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600"></div>
+        <div className="absolute inset-0 bg-black opacity-20"></div>
+        <div className="relative max-w-5xl mx-auto text-center">
+          <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full mb-8">
+            <span className="text-white text-sm font-semibold">💡 Our Philosophy</span>
+          </div>
+          <p className="text-3xl md:text-4xl font-bold text-white leading-relaxed">
+            "Even a late start can lead to a top rank — 
+            <span className="block text-yellow-300 mt-2">if the effort is relentless."</span>
+          </p>
+          <div className="mt-8 flex justify-center space-x-4">
+            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-white rounded-full animate-pulse delay-100"></div>
+            <div className="w-2 h-2 bg-white rounded-full animate-pulse delay-200"></div>
+          </div>
+        </div>
+      </section>
+
       {/* What We Cover Section */}
       <section id="what-we-cover" className="py-24 px-4 bg-gradient-to-b from-white to-gray-50">
         <div className="max-w-7xl mx-auto">
@@ -257,125 +376,6 @@ const Landing: React.FC = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Confidence Quote Section */}
-      <section className="py-20 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600"></div>
-        <div className="absolute inset-0 bg-black opacity-20"></div>
-        <div className="relative max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full mb-8">
-            <span className="text-white text-sm font-semibold">💡 Our Philosophy</span>
-          </div>
-          <p className="text-3xl md:text-4xl font-bold text-white leading-relaxed">
-            "Even a late start can lead to a top rank — 
-            <span className="block text-yellow-300 mt-2">if the effort is relentless."</span>
-          </p>
-          <div className="mt-8 flex justify-center space-x-4">
-            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-            <div className="w-2 h-2 bg-white rounded-full animate-pulse delay-100"></div>
-            <div className="w-2 h-2 bg-white rounded-full animate-pulse delay-200"></div>
-          </div>
-        </div>
-      </section>
-
-      {/* Choose Your Path Section */}
-      <section id="courses" className="py-24 px-4 bg-gradient-to-b from-gray-50 to-white">
-        <div className="max-w-7xl mx-auto">
-          {/* Section Header */}
-          <div className="text-center mb-20">
-            <div className="inline-flex items-center px-4 py-2 bg-indigo-50 rounded-full mb-6">
-              <span className="text-indigo-600 text-sm font-semibold">🎯 Choose Your Path</span>
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Select Your 
-              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> Preparation Batch</span>
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Choose the batch that matches your preparation level and timeline. 
-              All batches include comprehensive study materials and expert guidance.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {batches.map((batch, index) => (
-              <div key={batch.batch_id} className="group relative">
-                {/* Popular Badge for First Batch */}
-                {index === 0 && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-                    <div className="px-4 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-sm font-bold rounded-full shadow-lg">
-                      🔥 Most Popular
-                    </div>
-                  </div>
-                )}
-                
-                <div className="relative bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 flex flex-col h-full">
-                  {/* Gradient Border Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
-                  
-                  <div className="relative bg-white rounded-3xl m-1 flex flex-col h-full">
-                    {/* Header */}
-                    <div className="relative p-8 pb-6">
-                      <div className="flex justify-between items-start mb-6">
-                        <div className="flex items-center space-x-3">
-                          <div className="px-3 py-1 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs font-bold uppercase rounded-full tracking-wider">
-                            {batch.duration_months} Months
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-3xl font-bold text-gray-900">₹{batch.cost}</div>
-                          <div className="text-sm text-gray-500">one-time</div>
-                        </div>
-                      </div>
-                      
-                      <h3 className="text-2xl font-bold text-gray-900 mb-2 capitalize">
-                        {batch.batch_name} Batch
-                      </h3>
-                      <p className="text-gray-600 text-sm">
-                        Perfect for students looking for {batch.duration_months === 6 ? 'comprehensive' : batch.duration_months === 3 ? 'intensive' : 'quick'} preparation
-                      </p>
-                    </div>
-
-                    {/* Features */}
-                    <div className="px-8 pb-6 flex-grow">
-                      <ul className="space-y-3">
-                        {batch.features.split(',').map((feature, idx) => (
-                          <li key={idx} className="flex items-start text-gray-700">
-                            <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
-                              <Check className="w-3 h-3 text-green-600" />
-                            </div>
-                            <span className="text-sm">{feature.trim()}</span>
-                          </li>
-                        ))}
-                        {batch.has_doubts_access && (
-                          <li className="flex items-start text-gray-700">
-                            <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
-                              <Check className="w-3 h-3 text-green-600" />
-                            </div>
-                            <span className="text-sm font-semibold text-green-600">Exclusive Doubt Support</span>
-                          </li>
-                        )}
-                      </ul>
-                    </div>
-
-                    {/* CTA */}
-                    <div className="p-8 pt-0">
-                      <button 
-                        onClick={() => navigate(`/payment?batch_id=${batch.batch_id}`)}
-                        className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
-                      >
-                        Enroll Now
-                      </button>
-                      <p className="text-center text-xs text-gray-500 mt-3">
-                        Instant access after payment
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </section>

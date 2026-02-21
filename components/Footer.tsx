@@ -1,8 +1,30 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Phone, Mail, MessageCircle, Instagram, ArrowRight, BookOpen, Users, FileText, Shield } from 'lucide-react';
 
 const Footer: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleNavClick = (sectionId: string) => {
+    if (location.pathname === '/') {
+      // Already on landing page, just scroll
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      // Navigate to landing page first
+      navigate('/');
+      // Scroll after navigation
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
+  };
   return (
     <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white relative overflow-hidden">
       {/* Background Pattern */}
@@ -18,10 +40,12 @@ const Footer: React.FC = () => {
           {/* Brand Section */}
           <div className="lg:col-span-1">
             <Link to="/" className="inline-flex items-center space-x-2 mb-6 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                <span className="text-white font-bold text-lg">E</span>
-              </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+              <img 
+                src="/logo.png" 
+                alt="Edusphere Logo" 
+                className="w-12 h-12 sm:w-16 sm:h-16 object-contain group-hover:scale-110 transition-transform"
+              />
+              <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 EDUSPHERE
               </span>
             </Link>
@@ -39,7 +63,7 @@ const Footer: React.FC = () => {
                 <MessageCircle className="w-5 h-5 text-green-400 group-hover:text-green-300" />
               </a>
               <a
-                href="https://www.instagram.com/edusphere_2026?igsh=MTFncTA0cm1jdW43aw=="
+                href="https://www.instagram.com/edusphere_2026?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-pink-600/20 hover:bg-pink-600/30 border border-pink-600/30 rounded-lg flex items-center justify-center transition-all duration-300 group"
@@ -59,7 +83,7 @@ const Footer: React.FC = () => {
             <ul className="space-y-3">
               <li>
                 <button 
-                  onClick={() => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => handleNavClick('hero')}
                   className="text-gray-300 hover:text-white transition-colors duration-200 text-left w-full flex items-center group"
                 >
                   Home
@@ -68,7 +92,7 @@ const Footer: React.FC = () => {
               </li>
               <li>
                 <button 
-                  onClick={() => document.getElementById('what-we-cover')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => handleNavClick('what-we-cover')}
                   className="text-gray-300 hover:text-white transition-colors duration-200 text-left w-full flex items-center group"
                 >
                   About Us
@@ -77,7 +101,7 @@ const Footer: React.FC = () => {
               </li>
               <li>
                 <button 
-                  onClick={() => document.getElementById('courses')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => handleNavClick('courses')}
                   className="text-gray-300 hover:text-white transition-colors duration-200 text-left w-full flex items-center group"
                 >
                   Courses

@@ -1,0 +1,433 @@
+{
+  "name": "edusphere-main",
+  "path": "c:\\Users\\LENOVO X1 CARBAN\\Downloads\\edusphere-main",
+  "type": "directory",
+  "children": [
+    {
+      "name": "components",
+      "type": "folder",
+      "icon": "📁",
+      "children": [
+        {
+          "name": "AdminSidebar.tsx",
+          "type": "file",
+          "icon": "⚛️"
+        },
+        {
+          "name": "Footer.tsx",
+          "type": "file",
+          "icon": "⚛️"
+        },
+        {
+          "name": "Navbar.tsx",
+          "type": "file",
+          "icon": "⚛️"
+        },
+        {
+          "name": "TermsConsentModal.tsx",
+          "type": "file",
+          "icon": "⚛️"
+        }
+      ]
+    },
+    {
+      "name": "lib",
+      "type": "folder",
+      "icon": "📁",
+      "children": [
+        {
+          "name": "supabase.ts",
+          "type": "file",
+          "icon": "📘"
+        }
+      ]
+    },
+    {
+      "name": "pages",
+      "type": "folder",
+      "icon": "📁",
+      "children": [
+        {
+          "name": "tests",
+          "type": "folder",
+          "icon": "📁",
+          "children": [
+            {
+              "name": "TestAttemptPage.tsx",
+              "type": "file",
+              "icon": "⚛️"
+            },
+            {
+              "name": "TestResultPage.tsx",
+              "type": "file",
+              "icon": "⚛️"
+            },
+            {
+              "name": "TestsSection.tsx",
+              "type": "file",
+              "icon": "⚛️"
+            }
+          ]
+        },
+        {
+          "name": "AdminDailyClasses.tsx",
+          "type": "file",
+          "icon": "⚛️"
+        },
+        {
+          "name": "AdminDashboard.tsx",
+          "type": "file",
+          "icon": "⚛️"
+        },
+        {
+          "name": "AdminDoubtsClasses.tsx",
+          "type": "file",
+          "icon": "⚛️"
+        },
+        {
+          "name": "AdminLogin.tsx",
+          "type": "file",
+          "icon": "⚛️"
+        },
+        {
+          "name": "AdminRecordedClasses.tsx",
+          "type": "file",
+          "icon": "⚛️"
+        },
+        {
+          "name": "AllotBatches.tsx",
+          "type": "file",
+          "icon": "⚛️"
+        },
+        {
+          "name": "Dashboard.tsx",
+          "type": "file",
+          "icon": "⚛️"
+        },
+        {
+          "name": "Landing.tsx",
+          "type": "file",
+          "icon": "⚛️"
+        },
+        {
+          "name": "Login.tsx",
+          "type": "file",
+          "icon": "⚛️"
+        },
+        {
+          "name": "Payment.tsx",
+          "type": "file",
+          "icon": "⚛️"
+        },
+        {
+          "name": "PaymentSuccess.tsx",
+          "type": "file",
+          "icon": "⚛️"
+        },
+        {
+          "name": "PrivacyPolicy.tsx",
+          "type": "file",
+          "icon": "⚛️"
+        },
+        {
+          "name": "RefundPolicy.tsx",
+          "type": "file",
+          "icon": "⚛️"
+        },
+        {
+          "name": "TermsConditions.tsx",
+          "type": "file",
+          "icon": "⚛️"
+        }
+      ]
+    },
+    {
+      "name": "public",
+      "type": "folder",
+      "icon": "📁",
+      "children": [
+        {
+          "name": "android-chrome-192x192.png",
+          "type": "file",
+          "icon": "🖼️"
+        },
+        {
+          "name": "android-chrome-512x512.png",
+          "type": "file",
+          "icon": "🖼️"
+        },
+        {
+          "name": "apple-touch-icon.png",
+          "type": "file",
+          "icon": "🖼️"
+        },
+        {
+          "name": "favicon-16x16.png",
+          "type": "file",
+          "icon": "🖼️"
+        },
+        {
+          "name": "favicon-32x32.png",
+          "type": "file",
+          "icon": "🖼️"
+        },
+        {
+          "name": "favicon.ico",
+          "type": "file",
+          "icon": "📄"
+        },
+        {
+          "name": "logo.png",
+          "type": "file",
+          "icon": "🖼️"
+        },
+        {
+          "name": "site.webmanifest",
+          "type": "file",
+          "icon": "📄"
+        }
+      ]
+    },
+    {
+      "name": "src",
+      "type": "folder",
+      "icon": "📁",
+      "children": [
+        {
+          "name": "App.tsx",
+          "type": "file",
+          "icon": "⚛️"
+        },
+        {
+          "name": "main.tsx",
+          "type": "file",
+          "icon": "⚛️"
+        }
+      ]
+    },
+    {
+      "name": "supabase",
+      "type": "folder",
+      "icon": "📁",
+      "children": [
+        {
+          "name": ".temp",
+          "type": "folder",
+          "icon": "📁",
+          "children": [
+            {
+              "name": "cli-latest",
+              "type": "file",
+              "icon": "📄"
+            }
+          ]
+        },
+        {
+          "name": "functions",
+          "type": "folder",
+          "icon": "📁",
+          "children": [
+            {
+              "name": "allot-batch",
+              "type": "folder",
+              "icon": "📁",
+              "children": [
+                {
+                  "name": "index.ts",
+                  "type": "file",
+                  "icon": "📘"
+                }
+              ]
+            },
+            {
+              "name": "create-razorpay-order",
+              "type": "folder",
+              "icon": "📁",
+              "children": [
+                {
+                  "name": "index.ts",
+                  "type": "file",
+                  "icon": "📘"
+                }
+              ]
+            },
+            {
+              "name": "submit-test",
+              "type": "folder",
+              "icon": "📁",
+              "children": [
+                {
+                  "name": "index.ts",
+                  "type": "file",
+                  "icon": "📘"
+                }
+              ]
+            },
+            {
+              "name": "upload-teacher-photo",
+              "type": "folder",
+              "icon": "📁",
+              "children": [
+                {
+                  "name": "index.ts",
+                  "type": "file",
+                  "icon": "📘"
+                }
+              ]
+            },
+            {
+              "name": "verify-razorpay-payment",
+              "type": "folder",
+              "icon": "📁",
+              "children": [
+                {
+                  "name": "index.ts",
+                  "type": "file",
+                  "icon": "📘"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "supabase",
+          "type": "folder",
+          "icon": "📁",
+          "children": [
+            {
+              "name": ".temp",
+              "type": "folder",
+              "icon": "📁",
+              "children": [
+                {
+                  "name": "cli-latest",
+                  "type": "file",
+                  "icon": "📄"
+                },
+                {
+                  "name": "gotrue-version",
+                  "type": "file",
+                  "icon": "📄"
+                },
+                {
+                  "name": "pooler-url",
+                  "type": "file",
+                  "icon": "📄"
+                },
+                {
+                  "name": "postgres-version",
+                  "type": "file",
+                  "icon": "📄"
+                },
+                {
+                  "name": "project-ref",
+                  "type": "file",
+                  "icon": "📄"
+                },
+                {
+                  "name": "rest-version",
+                  "type": "file",
+                  "icon": "📄"
+                },
+                {
+                  "name": "storage-migration",
+                  "type": "file",
+                  "icon": "📄"
+                },
+                {
+                  "name": "storage-version",
+                  "type": "file",
+                  "icon": "📄"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "types",
+      "type": "folder",
+      "icon": "📁",
+      "children": [
+        {
+          "name": "database.ts",
+          "type": "file",
+          "icon": "📘"
+        }
+      ]
+    },
+    {
+      "name": ".gitignore",
+      "type": "file",
+      "icon": "📁"
+    },
+    {
+      "name": "App.tsx",
+      "type": "file",
+      "icon": "⚛️"
+    },
+    {
+      "name": "functions_files.txt",
+      "type": "file",
+      "icon": "📄"
+    },
+    {
+      "name": "index.html",
+      "type": "file",
+      "icon": "🌐"
+    },
+    {
+      "name": "index.tsx",
+      "type": "file",
+      "icon": "⚛️"
+    },
+    {
+      "name": "landingpage_improvement.txt",
+      "type": "file",
+      "icon": "📄"
+    },
+    {
+      "name": "landingpageimprovement.md",
+      "type": "file",
+      "icon": "📝"
+    },
+    {
+      "name": "modal.md",
+      "type": "file",
+      "icon": "📝"
+    },
+    {
+      "name": "package-lock.json",
+      "type": "file",
+      "icon": "⚙️"
+    },
+    {
+      "name": "package.json",
+      "type": "file",
+      "icon": "📦"
+    },
+    {
+      "name": "policy_pages.md",
+      "type": "file",
+      "icon": "📝"
+    },
+    {
+      "name": "sql_codes_used.txt",
+      "type": "file",
+      "icon": "📄"
+    },
+    {
+      "name": "vite.config.ts",
+      "type": "file",
+      "icon": "📘"
+    }
+  ],
+  "metadata": {
+    "generated": "2026-02-21T04:15:07.375Z",
+    "generator": "FileTree Pro Extension",
+    "version": "0.2.0",
+    "showIcons": true,
+    "maxDepth": 10
+  }
+}
