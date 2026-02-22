@@ -213,7 +213,7 @@ const Dashboard: React.FC = () => {
 
   // Mobile Bottom Navigation
   const MobileBottomNav = () => (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 md:hidden">
+    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 lg:hidden">
       <div className="flex justify-around py-2">
         <NavLink
           to="/dashboard/classes"
@@ -296,7 +296,7 @@ const Dashboard: React.FC = () => {
       {/* Desktop Header */}
       <header className="hidden lg:flex bg-white border-b border-gray-200 h-16 items-center justify-between px-6 sticky top-0 z-40">
         <div className="flex items-center space-x-4">
-          <span className="text-lg font-bold text-indigo-600">EDUSPACE</span>
+          <span className="text-lg font-bold text-indigo-600">EDUSPHERE</span>
           <div className="flex items-center space-x-2 text-sm text-gray-600">
             <span>{currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
             <Wifi className="w-4 h-4" />
