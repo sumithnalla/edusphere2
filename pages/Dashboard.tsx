@@ -245,6 +245,7 @@ const Dashboard: React.FC = () => {
           <FileText className="w-5 h-5 mb-1" />
           <span>Tests</span>
         </NavLink>
+        {hasDoubtsAccess && (
         <NavLink
           to="/dashboard/doubts"
           className={({ isActive }) => `
@@ -255,6 +256,7 @@ const Dashboard: React.FC = () => {
           <MessageCircle className="w-5 h-5 mb-1" />
           <span>Doubts</span>
         </NavLink>
+        )}
         <NavLink
           to="/dashboard/profile"
           className={({ isActive }) => `
@@ -274,16 +276,21 @@ const Dashboard: React.FC = () => {
       {/* Mobile Header */}
       <header className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between lg:hidden sticky top-0 z-40">
         <div className="flex items-center space-x-2">
+          <img 
+            src="/logo.png" 
+            alt="Edusphere" 
+            className="w-8 h-8 object-contain"
+          />
           <span className="text-lg font-bold text-indigo-600">EDUSPHERE</span>
         </div>
         <div className="flex items-center space-x-3">
           <button onClick={handleLogout} className="text-sm font-medium text-gray-500 hover:text-red-600">
             Logout
           </button>
-          <div className="relative">
+          {/* <div className="relative">
             <Bell className="w-5 h-5 text-gray-600" />
             <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
-          </div>
+          </div> */}
           <button 
             onClick={() => navigate('/dashboard/profile')}
             className="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center hover:bg-indigo-700 transition-colors"
@@ -296,18 +303,18 @@ const Dashboard: React.FC = () => {
       {/* Desktop Header */}
       <header className="hidden lg:flex bg-white border-b border-gray-200 h-16 items-center justify-between px-6 sticky top-0 z-40">
         <div className="flex items-center space-x-4">
+          <img 
+            src="/logo.png" 
+            alt="Edusphere" 
+            className="w-8 h-8 object-contain"
+          />
           <span className="text-lg font-bold text-indigo-600">EDUSPHERE</span>
-          <div className="flex items-center space-x-2 text-sm text-gray-600">
-            <span>{currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
-            <Wifi className="w-4 h-4" />
-            <Battery className="w-5 h-5" />
-          </div>
         </div>
         <div className="flex items-center space-x-4">
-          <div className="relative">
+          {/* <div className="relative">
             <Bell className="w-5 h-5 text-gray-600" />
             <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
-          </div>
+          </div> */}
           <button 
             onClick={() => navigate('/dashboard/profile')}
             className="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center hover:bg-indigo-700 transition-colors"
@@ -929,7 +936,7 @@ const ProfileSection: React.FC<{ profile: UserProfile }> = ({ profile }) => {
             </div>
             <div className="flex justify-between">
               <span className="text-gray-500">Duration:</span>
-              <span className="font-semibold text-gray-900 text-right">{profile.batches?.duration_months || 0} Months</span>
+              <span className="font-semibold text-gray-900 text-right">{profile.batches?.duration_months || 0} Days</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-500">Doubts Access:</span>

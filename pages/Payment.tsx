@@ -176,7 +176,7 @@ const Payment: React.FC = () => {
             </div>
             <div className="flex justify-between border-b border-indigo-500 pb-2">
               <span className="opacity-80">Duration</span>
-              <span>{batch.duration_months} Months</span>
+              <span>{batch.duration_months} Days</span>
             </div>
             <div className="flex justify-between pt-4 text-2xl font-bold">
               <span>Total</span>

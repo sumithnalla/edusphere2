@@ -546,3 +546,11 @@ CREATE POLICY "Admins delete doubts classes"
   ON doubts_classes
   FOR DELETE
   USING ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+
+
+ALTER TABLE batches
+DROP CONSTRAINT batches_duration_months_check;
+
+ALTER TABLE batches
+ADD CONSTRAINT batches_duration_months_check
+CHECK (duration_months IN (6, 12, 18, 24, 36, 40));

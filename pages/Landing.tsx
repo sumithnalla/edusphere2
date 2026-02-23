@@ -13,6 +13,18 @@ const Landing: React.FC = () => {
   const [expandedFAQ, setExpandedFAQ] = useState<number | null>(0);
   const navigate = useNavigate();
 
+  // Helper function to calculate MRP and discount percentage
+  const getMrpAndDiscount = (cost: number) => {
+    const mrpMap: Record<number, number> = {
+      3999: 7999,
+      1999: 4999,
+      999: 2999
+    };
+    const mrp = mrpMap[cost] || cost;
+    const discountPercent = Math.round(((mrp - cost) / mrp) * 100);
+    return { mrp, discountPercent };
+  };
+
   useEffect(() => {
     const fetchBatches = async () => {
       const { data, error } = await supabase
@@ -20,7 +32,7 @@ const Landing: React.FC = () => {
         .select('*')
         .eq('is_active', true);
       
-      if (data) setBatches(data);
+      if (data) setBatches(data.sort((a, b) => b.cost - a.cost));
       setLoading(false);
     };
     fetchBatches();
@@ -79,10 +91,12 @@ const Landing: React.FC = () => {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a 
-                href="#what-we-cover" 
+                href="https://docs.google.com/forms/d/e/1FAIpQLScEvucpKPBBGBbxT5QcqTPmRe8VFnKxMDmig2vDP6KS2aflIQ/viewform?pli=1" 
+                target="_blank" 
+                rel="noopener noreferrer"
                 className="px-8 py-4 bg-white text-indigo-600 rounded-xl font-bold hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-xl"
               >
-                Explore Programs
+                Contact Form
               </a>
               <a 
                 href="#courses" 
@@ -92,21 +106,7 @@ const Landing: React.FC = () => {
               </a>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto pt-12">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-white">500+</div>
-                <div className="text-blue-200 text-sm">Students Enrolled</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-white">95%</div>
-                <div className="text-blue-200 text-sm">Success Rate</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-white">4.9★</div>
-                <div className="text-blue-200 text-sm">Student Rating</div>
-              </div>
-            </div>
+
           </div>
         </div>
 
@@ -135,7 +135,10 @@ const Landing: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {batches.map((batch, index) => (
+            {batches.map((batch, index) => {
+              const { mrp, discountPercent } = getMrpAndDiscount(batch.cost);
+              
+              return (
               <div key={batch.batch_id} className="group relative">
                 {/* Popular Badge for First Batch */}
                 {index === 0 && (
@@ -156,12 +159,21 @@ const Landing: React.FC = () => {
                       <div className="flex justify-between items-start mb-6">
                         <div className="flex items-center space-x-3">
                           <div className="px-3 py-1 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs font-bold uppercase rounded-full tracking-wider">
-                            {batch.duration_months} Months
+                            {batch.duration_months} Days
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="text-3xl font-bold text-gray-900">₹{batch.cost}</div>
-                          <div className="text-sm text-gray-500">one-time</div>
+                          <div className="flex flex-col items-end gap-1">
+                            <div className="text-sm text-gray-500 line-through">
+                              ₹{mrp}
+                            </div>
+                            <div className="text-3xl font-bold text-transparent bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text">
+                              ₹{batch.cost}
+                            </div>
+                          </div>
+                          <div className="text-sm text-green-600 font-semibold">
+                            {discountPercent}% OFF
+                          </div>
                         </div>
                       </div>
                       
@@ -210,7 +222,8 @@ const Landing: React.FC = () => {
                   </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -262,22 +275,22 @@ const Landing: React.FC = () => {
                     <BookOpen className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-4">Complete Syllabus</h3>
-                  <ul className="space-y-3 text-gray-600 text-sm">
-                    <li className="flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full mr-2"></div>
-                      Mathematics: Algebra, Calculus & more
+                  <ul className="space-y-3 text-gray-600 text-sm w-full text-left">
+                    <li className="flex items-start">
+                      <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span>Mathematics: Algebra, Calculus & more</span>
                     </li>
-                    <li className="flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full mr-2"></div>
-                      Physics: Mechanics, Electricity & Modern
+                    <li className="flex items-start">
+                      <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span>Physics: Mechanics, Electricity & Modern</span>
                     </li>
-                    <li className="flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full mr-2"></div>
-                      Chemistry: Physical, Organic & Inorganic
+                    <li className="flex items-start">
+                      <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span>Chemistry: Physical, Organic & Inorganic</span>
                     </li>
-                    <li className="flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full mr-2"></div>
-                      Updated as per latest EAMCET syllabus
+                    <li className="flex items-start">
+                      <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span>Updated as per latest EAMCET syllabus</span>
                     </li>
                   </ul>
                 </div>
@@ -293,22 +306,22 @@ const Landing: React.FC = () => {
                     <BarChart3 className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-4">Smart Test Series</h3>
-                  <ul className="space-y-3 text-gray-600 text-sm">
-                    <li className="flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 bg-purple-600 rounded-full mr-2"></div>
-                      Chapter-wise tests
+                  <ul className="space-y-3 text-gray-600 text-sm w-full text-left">
+                    <li className="flex items-start">
+                      <div className="w-1.5 h-1.5 bg-purple-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span>Chapter-wise tests</span>
                     </li>
-                    <li className="flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 bg-purple-600 rounded-full mr-2"></div>
-                      Weekly performance evaluations
+                    <li className="flex items-start">
+                      <div className="w-1.5 h-1.5 bg-purple-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span>Weekly performance evaluations</span>
                     </li>
-                    <li className="flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 bg-purple-600 rounded-full mr-2"></div>
-                      Full-length mock exams
+                    <li className="flex items-start">
+                      <div className="w-1.5 h-1.5 bg-purple-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span>Full-length mock exams</span>
                     </li>
-                    <li className="flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 bg-purple-600 rounded-full mr-2"></div>
-                      Time-based exam simulation
+                    <li className="flex items-start">
+                      <div className="w-1.5 h-1.5 bg-purple-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span>Time-based exam simulation</span>
                     </li>
                   </ul>
                 </div>
@@ -324,22 +337,22 @@ const Landing: React.FC = () => {
                     <Zap className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-4">Rank Strategy</h3>
-                  <ul className="space-y-3 text-gray-600 text-sm">
-                    <li className="flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 bg-green-600 rounded-full mr-2"></div>
-                      PYQ focused training
+                  <ul className="space-y-3 text-gray-600 text-sm w-full text-left">
+                    <li className="flex items-start">
+                      <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span>PYQ focused training</span>
                     </li>
-                    <li className="flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 bg-green-600 rounded-full mr-2"></div>
-                      Shortcut methods & techniques
+                    <li className="flex items-start">
+                      <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span>Shortcut methods & techniques</span>
                     </li>
-                    <li className="flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 bg-green-600 rounded-full mr-2"></div>
-                      High-weightage topics
+                    <li className="flex items-start">
+                      <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span>High-weightage topics</span>
                     </li>
-                    <li className="flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 bg-green-600 rounded-full mr-2"></div>
-                      Exam-day time management
+                    <li className="flex items-start">
+                      <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span>Exam-day time management</span>
                     </li>
                   </ul>
                 </div>
@@ -355,22 +368,22 @@ const Landing: React.FC = () => {
                     <MessageCircle className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-4">Doubt Support</h3>
-                  <ul className="space-y-3 text-gray-600 text-sm">
-                    <li className="flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 bg-orange-600 rounded-full mr-2"></div>
-                      Regular live doubt sessions
+                  <ul className="space-y-3 text-gray-600 text-sm w-full text-left">
+                    <li className="flex items-start">
+                      <div className="w-1.5 h-1.5 bg-orange-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span>Regular live doubt sessions</span>
                     </li>
-                    <li className="flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 bg-orange-600 rounded-full mr-2"></div>
-                      Structured study planning
+                    <li className="flex items-start">
+                      <div className="w-1.5 h-1.5 bg-orange-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span>Structured study planning</span>
                     </li>
-                    <li className="flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 bg-orange-600 rounded-full mr-2"></div>
-                      Strategy guidance
+                    <li className="flex items-start">
+                      <div className="w-1.5 h-1.5 bg-orange-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span>Strategy guidance</span>
                     </li>
-                    <li className="flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 bg-orange-600 rounded-full mr-2"></div>
-                      Priority support
+                    <li className="flex items-start">
+                      <div className="w-1.5 h-1.5 bg-orange-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span>Priority support</span>
                     </li>
                   </ul>
                 </div>
@@ -433,9 +446,14 @@ const Landing: React.FC = () => {
                 </div>
               </div>
 
-              <button className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
+              <a 
+                href="https://wa.me/919390095383" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg text-center block"
+              >
                 Contact Our Team
-              </button>
+              </a>
             </div>
 
             {/* FAQ Accordion */}

@@ -52,26 +52,7 @@ const Footer: React.FC = () => {
             <p className="text-gray-300 leading-relaxed mb-6">
               Empowering students with quality education and expert guidance to achieve their EAMCET dreams.
             </p>
-            <div className="flex space-x-4">
-              <a
-                href="https://wa.me/919390095383"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-green-600/20 hover:bg-green-600/30 border border-green-600/30 rounded-lg flex items-center justify-center transition-all duration-300 group"
-                title="WhatsApp"
-              >
-                <MessageCircle className="w-5 h-5 text-green-400 group-hover:text-green-300" />
-              </a>
-              <a
-                href="https://www.instagram.com/edusphere_2026?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-pink-600/20 hover:bg-pink-600/30 border border-pink-600/30 rounded-lg flex items-center justify-center transition-all duration-300 group"
-                title="Instagram"
-              >
-                <Instagram className="w-5 h-5 text-pink-400 group-hover:text-pink-300" />
-              </a>
-            </div>
+
           </div>
 
           {/* Quick Links */}
@@ -181,6 +162,16 @@ const Footer: React.FC = () => {
                 <div>
                   <a href="mailto:srirajperugu11@gmail.com" className="text-gray-300 hover:text-white transition-colors duration-200">
                     srirajperugu11@gmail.com
+                  </a>
+                </div>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-indigo-600/20 border border-indigo-600/30 rounded-lg flex items-center justify-center">
+                  <Instagram className="w-5 h-5 text-indigo-400" />
+                </div>
+                <div>
+                  <a href="https://www.instagram.com/edusphere_2026?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors duration-200">
+                    edusphere_2026
                   </a>
                 </div>
               </div>

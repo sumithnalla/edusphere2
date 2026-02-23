@@ -13,7 +13,6 @@ const TermsConditions: React.FC = () => {
 
       <div className="max-w-4xl mx-auto px-4 pt-24 pb-12">
         <h1 className="text-4xl font-bold text-gray-900 mb-2">Terms & Conditions</h1>
-        <p className="text-gray-600 mb-12">Effective Date: [Insert Date]</p>
 
         <div className="bg-white rounded-lg shadow-md p-8 space-y-8 mb-12">
           <p className="text-gray-700 leading-relaxed">
