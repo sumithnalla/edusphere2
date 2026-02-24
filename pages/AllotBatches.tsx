@@ -181,36 +181,62 @@ const AllotBatches: React.FC = () => {
           <div className="lg:col-span-2 space-y-8">
             <section className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
               <h2 className="text-xl font-bold mb-6">New Allotment</h2>
-              <form onSubmit={handleAllot} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-bold text-gray-600 mb-2">
-                    Payment ID <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    required
-                    type="number"
-                    min={1}
-                    value={formData.payment_id}
-                    onChange={(e) => setFormData({ ...formData, payment_id: e.target.value })}
-                    className="w-full border border-gray-300 p-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                    placeholder="Select from pending list"
-                  />
+              <form onSubmit={handleAllot} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-bold text-gray-600 mb-2">
+                      Payment ID <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      required
+                      type="number"
+                      min={1}
+                      value={formData.payment_id}
+                      onChange={(e) => setFormData({ ...formData, payment_id: e.target.value })}
+                      className="w-full border border-gray-300 p-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      placeholder="Select from pending list"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-bold text-gray-600 mb-2">
+                      Student Password <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      required
+                      type="text"
+                      minLength={6}
+                      value={formData.password}
+                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                      className="w-full border border-gray-300 p-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      placeholder="Minimum 6 characters"
+                    />
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-bold text-gray-600 mb-2">
-                    Student Password <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    minLength={6}
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="w-full border border-gray-300 p-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                    placeholder="Minimum 6 characters"
-                  />
-                </div>
+                {formData.payment_id && pendingPayments.find(p => p.payment_id === Number(formData.payment_id)) && (
+                  <div className="p-4 bg-indigo-50 border border-indigo-200 rounded-xl">
+                    <h3 className="text-sm font-bold text-indigo-900 mb-3">Student Information</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-gray-600 font-semibold">Name</p>
+                        <p className="text-gray-900">{pendingPayments.find(p => p.payment_id === Number(formData.payment_id))?.student_name}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-600 font-semibold">Email</p>
+                        <p className="text-gray-900">{pendingPayments.find(p => p.payment_id === Number(formData.payment_id))?.email}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-600 font-semibold">Phone</p>
+                        <p className="text-gray-900">{pendingPayments.find(p => p.payment_id === Number(formData.payment_id))?.phone}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-600 font-semibold">Amount Paid</p>
+                        <p className="text-gray-900">Rs.{pendingPayments.find(p => p.payment_id === Number(formData.payment_id))?.amount_paid}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <div>
                   <label className="block text-sm font-bold text-gray-600 mb-2">
@@ -231,7 +257,7 @@ const AllotBatches: React.FC = () => {
                   </select>
                 </div>
 
-                <div className="md:col-span-2">
+                <div>
                   <button
                     disabled={processing}
                     className="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
@@ -316,7 +342,8 @@ const AllotBatches: React.FC = () => {
                     <span className="text-xs text-gray-400">Rs.{payment.amount_paid}</span>
                   </div>
                   <h4 className="font-bold text-gray-900 group-hover:text-indigo-600 transition">{payment.student_name}</h4>
-                  <p className="text-xs text-gray-500 mb-4">{payment.email}</p>
+                  <p className="text-xs text-gray-500">{payment.email}</p>
+                  <p className="text-xs text-gray-500 mb-4">{payment.phone}</p>
                   <p className="text-xs text-indigo-600 font-bold">Click to autofill form</p>
                 </div>
               ))}
