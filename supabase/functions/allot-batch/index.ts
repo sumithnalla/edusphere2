@@ -116,6 +116,7 @@ serve(async (req) => {
       payment_id: paymentRow.payment_id,
       account_status: 'active',
       youtube_channel_added: false,
+      default_password: password,
     });
 
     if (insertUserError) {

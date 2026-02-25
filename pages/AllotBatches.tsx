@@ -117,10 +117,17 @@ const AllotBatches: React.FC = () => {
     }
   };
 
+  const generateDefaultPassword = (studentName: string, phone: string): string => {
+    const first4Chars = studentName.substring(0, 4).toUpperCase();
+    const last4Digits = phone.slice(-4);
+    return first4Chars + last4Digits;
+  };
+
   const selectPending = (payment: Payment) => {
+    const defaultPassword = generateDefaultPassword(payment.student_name, payment.phone);
     setFormData({
       payment_id: payment.payment_id.toString(),
-      password: '',
+      password: defaultPassword,
       batch_id: payment.batch_id.toString(),
     });
     setErrorMessage('');

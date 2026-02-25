@@ -58,9 +58,14 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId, isRetake = fa
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [autoSubmitCountdown, setAutoSubmitCountdown] = useState<number | null>(null);
   const [error, setError] = useState('');
+  const [saveWarning, setSaveWarning] = useState<string | null>(null);
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
 
   const hasSubmittedRef = useRef(false);
+  const pendingSavesRef = useRef<Map<number, Option | null>>(new Map());
+  const lastPersistedAnswersRef = useRef<Record<number, Option | null>>({});
+  const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isFlushingRef = useRef(false);
 
   const examIdNum = useMemo(() => Number(examId), [examId]);
 
@@ -136,6 +141,11 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId, isRetake = fa
       const questionRows = questionsData as QuestionRow[];
       const questionIds = questionRows.map((q) => q.question_id);
 
+      const initialAnswers: Record<number, Option | null> = {};
+      questionRows.forEach((q) => {
+        initialAnswers[q.question_id] = null;
+      });
+
       // Skip fetching previous responses if this is a retake
       if (!actualIsRetake) {
         const { data: previousResponses, error: responsesError } = await supabase
@@ -150,24 +160,17 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId, isRetake = fa
           return;
         }
 
-        const initialAnswers: Record<number, Option | null> = {};
-        questionRows.forEach((q) => {
-          initialAnswers[q.question_id] = null;
-        });
-
         (previousResponses as ResponseRow[] | null)?.forEach((res) => {
           initialAnswers[res.question_id] = res.selected_option;
         });
-
-        setAnswers(initialAnswers);
-      } else {
-        // For retake, initialize all answers as null
-        const initialAnswers: Record<number, Option | null> = {};
-        questionRows.forEach((q) => {
-          initialAnswers[q.question_id] = null;
-        });
-        setAnswers(initialAnswers);
       }
+
+      setAnswers(initialAnswers);
+      lastPersistedAnswersRef.current = { ...initialAnswers };
+      pendingSavesRef.current.clear();
+      setSaveWarning(null);
+      setSaving(false);
+      setLastSavedAt(null);
 
       setExam(examData as ExamRow);
       setQuestions(questionRows);
@@ -189,76 +192,102 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId, isRetake = fa
     return () => clearInterval(intervalId);
   }, [loading, submitting]);
 
-  const saveSingleAnswer = async (questionId: number, selectedOption: Option | null) => {
-    const { error: saveError } = await supabase.from('student_responses').upsert(
-      {
-        user_id: userId,
-        question_id: questionId,
-        selected_option: selectedOption,
-        is_correct: null,
-      },
-      { onConflict: 'user_id,question_id' }
-    );
+  const scheduleRetry = () => {
+    if (retryTimeoutRef.current) return;
 
-    if (saveError) {
-      setError(`Auto-save failed: ${saveError.message}`);
+    retryTimeoutRef.current = setTimeout(() => {
+      retryTimeoutRef.current = null;
+      void flushPendingSaves();
+    }, 2000);
+  };
+
+  const flushPendingSaves = async () => {
+    if (isFlushingRef.current || pendingSavesRef.current.size === 0) {
+      if (pendingSavesRef.current.size === 0) setSaving(false);
       return;
     }
 
-    setLastSavedAt(new Date().toLocaleTimeString());
+    isFlushingRef.current = true;
+    setSaving(true);
+
+    try {
+      while (pendingSavesRef.current.size > 0) {
+        const nextEntry = pendingSavesRef.current.entries().next().value as [number, Option | null] | undefined;
+        if (!nextEntry) break;
+
+        const [questionId, selectedOption] = nextEntry;
+        pendingSavesRef.current.delete(questionId);
+
+        if (lastPersistedAnswersRef.current[questionId] === selectedOption) {
+          continue;
+        }
+
+        const { error: saveError } = await supabase.from('student_responses').upsert(
+          {
+            user_id: userId,
+            question_id: questionId,
+            selected_option: selectedOption,
+            is_correct: null,
+          },
+          { onConflict: 'user_id,question_id' }
+        );
+
+        if (saveError) {
+          pendingSavesRef.current.set(questionId, selectedOption);
+          setSaveWarning(`Auto-save retrying (${saveError.message})`);
+          scheduleRetry();
+          break;
+        }
+
+        lastPersistedAnswersRef.current[questionId] = selectedOption;
+        setLastSavedAt(new Date().toLocaleTimeString());
+        setSaveWarning(null);
+      }
+    } finally {
+      isFlushingRef.current = false;
+      if (pendingSavesRef.current.size === 0) setSaving(false);
+    }
   };
 
-  const clearResponse = async (questionId: number) => {
+  const queueAnswerSave = (questionId: number, selectedOption: Option | null) => {
+    pendingSavesRef.current.set(questionId, selectedOption);
+    void flushPendingSaves();
+  };
+
+  const updateAnswer = (questionId: number, selectedOption: Option | null) => {
+    const currentOption = answers[questionId] ?? null;
+    if (currentOption === selectedOption) return;
+
     setAnswers((prev) => ({
       ...prev,
-      [questionId]: null,
+      [questionId]: selectedOption,
     }));
-    await saveSingleAnswer(questionId, null);
+    queueAnswerSave(questionId, selectedOption);
   };
 
-  const saveAndNext = async () => {
+  const clearResponse = (questionId: number) => {
+    updateAnswer(questionId, null);
+  };
+
+  const saveAndNext = () => {
     const currentQ = questions[currentIndex];
-    if (currentQ && answers[currentQ.question_id]) {
-      await saveSingleAnswer(currentQ.question_id, answers[currentQ.question_id]);
+    if (currentQ) {
+      const selectedOption = answers[currentQ.question_id] ?? null;
+      queueAnswerSave(currentQ.question_id, selectedOption);
     }
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     }
   };
 
-  const saveAllAnswers = async () => {
-    if (!questions.length) return;
-
-    const rows = questions.map((q) => ({
-      user_id: userId,
-      question_id: q.question_id,
-      selected_option: answers[q.question_id] || null,
-      is_correct: null as boolean | null,
-    }));
-
-    setSaving(true);
-    const { error: saveError } = await supabase.from('student_responses').upsert(rows, {
-      onConflict: 'user_id,question_id',
-    });
-    setSaving(false);
-
-    if (saveError) {
-      setError(`Periodic auto-save failed: ${saveError.message}`);
-      return;
-    }
-
-    setLastSavedAt(new Date().toLocaleTimeString());
-  };
-
   useEffect(() => {
-    if (loading || submitting || !questions.length) return;
-
-    const intervalId = setInterval(() => {
-      saveAllAnswers();
-    }, 30000);
-
-    return () => clearInterval(intervalId);
-  }, [answers, loading, questions, submitting]);
+    return () => {
+      if (retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current);
+        retryTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   const handleSubmit = async (autoSubmitted = false) => {
     if (submitting || hasSubmittedRef.current) return;
@@ -438,6 +467,7 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId, isRetake = fa
             Answered {answeredCount}/{questions.length}
             {lastSavedAt ? ` • Last saved at ${lastSavedAt}` : ''}
             {saving ? ' • Saving...' : ''}
+            {saveWarning ? ` • ${saveWarning}` : ''}
           </p>
         </div>
         <div className={`text-2xl font-bold ${timeLeft <= 300 ? 'text-red-600' : 'text-indigo-700'}`}>
@@ -536,13 +566,7 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId, isRetake = fa
               return (
                 <button
                   key={option}
-                  onClick={() => {
-                    setAnswers((prev) => ({
-                      ...prev,
-                      [currentQuestion.question_id]: option,
-                    }));
-                    saveSingleAnswer(currentQuestion.question_id, option);
-                  }}
+                  onClick={() => updateAnswer(currentQuestion.question_id, option)}
                   className={`w-full text-left p-4 rounded-xl border transition ${
                     selected
                       ? 'border-indigo-500 bg-indigo-50 text-indigo-800'
