@@ -86,7 +86,7 @@ const AdminDashboard: React.FC = () => {
         <div className="flex justify-between items-end mb-10">
           <div>
             <h1 className="text-4xl font-black text-gray-900 tracking-tight">Platform Overview</h1>
-            <p className="text-gray-500 mt-2">Real-time statistics for Eduspace EAMCET.</p>
+            <p className="text-gray-500 mt-2">Real-time statistics for EDUSPHERE EAMCET.</p>
           </div>
           <div className="flex space-x-4">
             <button className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition">Generate Report</button>

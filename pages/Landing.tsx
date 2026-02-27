@@ -32,7 +32,7 @@ const Landing: React.FC = () => {
         .select('*')
         .eq('is_active', true);
       
-      if (data) setBatches(data.sort((a, b) => b.cost - a.cost));
+      if (data) setBatches(data.sort((a, b) => a.cost - b.cost));
       setLoading(false);
     };
     fetchBatches();

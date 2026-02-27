@@ -38,7 +38,7 @@ const Login: React.FC = () => {
     <div className="min-h-screen bg-indigo-600 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl p-10">
         <div className="text-center mb-10">
-          <Link to="/" className="text-3xl font-black text-indigo-600 tracking-tight">EDUSPACE</Link>
+          <Link to="/" className="text-3xl font-black text-indigo-600 tracking-tight">EDUSPHERE</Link>
           <h2 className="text-2xl font-bold text-gray-800 mt-6">Student Login</h2>
           <p className="text-gray-500 mt-2">Enter your registered email and password.</p>
         </div>

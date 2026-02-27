@@ -17,7 +17,7 @@ interface QuestionPDF {
 const Resources: React.FC = () => {
   const [pdfs, setPdfs] = useState<QuestionPDF[]>([]);
   const [loading, setLoading] = useState(false);
-  const [selectedFilter, setSelectedFilter] = useState<string>('all');
+  // const [selectedFilter, setSelectedFilter] = useState<string>('all');
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -90,11 +90,11 @@ const Resources: React.FC = () => {
         </div>
 
         {/* Debug Info */}
-        <div className="mb-8 p-4 bg-blue-100 border border-blue-400 rounded-lg">
+        {/* <div className="mb-8 p-4 bg-blue-100 border border-blue-400 rounded-lg">
           <p className="text-sm text-blue-900">
             <strong>Debug Info:</strong> Loading: {loading ? 'Yes' : 'No'} | PDFs Found: {pdfs.length}
           </p>
-        </div>
+        </div> */}
 
         {/* Error Display */}
         {error && (
@@ -105,7 +105,7 @@ const Resources: React.FC = () => {
         )}
 
         {/* Filter Buttons */}
-        {!error && (
+        {/* {!error && (
           <div className="flex flex-wrap gap-3 mb-12">
             <button
               onClick={() => setSelectedFilter('all')}
@@ -158,7 +158,7 @@ const Resources: React.FC = () => {
               General
             </button>
           </div>
-        )}
+        )} */}
 
         {/* Loading State */}
         {loading && (

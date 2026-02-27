@@ -1,5 +1,5 @@
 -- ============================================
--- EDUSPACE EAMCET PLATFORM - SUPABASE SETUP
+-- EDUSPHERE EAMCET PLATFORM - SUPABASE SETUP
 -- ============================================
 -- Run this entire script in Supabase SQL Editor
 -- Order matters: Tables first, then RLS policies
@@ -473,7 +473,7 @@ ORDER BY tablename, policyname;
 -- ============================================
 -- Next steps:
 -- 1. Create admin user in Supabase Auth Dashboard
---    Email: edutech_sriraj@eduspace.com
+--    Email: edutech_sriraj@edusphere.com
 --    Password: decode@Sriraj2026
 --    User Metadata: {"role": "admin"}
 --

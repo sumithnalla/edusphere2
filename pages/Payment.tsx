@@ -70,7 +70,7 @@ const Payment: React.FC = () => {
         key: orderData.key_id,
         amount: orderData.amount,
         currency: orderData.currency,
-        name: "Eduspace EAMCET",
+        name: "EDUSPHERE EAMCET",
         description: `Enrollment for ${batch.batch_name} Batch`,
         order_id: orderData.order_id,
         handler: async (response: any) => {
@@ -116,7 +116,14 @@ const Payment: React.FC = () => {
   if (!batch) return <div className="p-10 text-center">Batch not found.</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 relative">
+      <button
+        type="button"
+        onClick={() => navigate('/')}
+        className="absolute top-6 left-6 px-4 py-2 rounded-lg bg-white text-gray-700 border border-gray-200 hover:bg-gray-100 font-semibold"
+      >
+        Back to Home
+      </button>
       <div className="max-w-4xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
         {/* Left: Form */}
         <div className="flex-1 p-8 md:p-12">

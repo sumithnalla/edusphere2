@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
 const AdminLogin: React.FC = () => {
-  const [email, setEmail] = useState('edutech_sriraj@eduspace.com');
+  const [email, setEmail] = useState('edutech_sriraj@edusphere.com');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,12 +39,19 @@ const AdminLogin: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4 relative">
+      <button
+        type="button"
+        onClick={() => navigate('/')}
+        className="absolute top-6 left-6 px-4 py-2 rounded-lg bg-white text-gray-700 border border-gray-200 hover:bg-gray-100 font-semibold"
+      >
+        Back to Home
+      </button>
       <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-10">
         <div className="text-center mb-10">
           <span className="text-xs font-black bg-indigo-100 text-indigo-600 px-3 py-1 rounded-full uppercase tracking-widest">Admin Control</span>
           <h2 className="text-3xl font-black text-gray-900 mt-6">Secure Portal</h2>
-          <p className="text-gray-500 mt-2">Sign in to manage the Eduspace platform.</p>
+          <p className="text-gray-500 mt-2">Sign in to manage the EDUSPHERE platform.</p>
         </div>
 
         {error && (
@@ -62,7 +69,7 @@ const AdminLogin: React.FC = () => {
               value={email}
               onChange={e => setEmail(e.target.value)}
               className="w-full border-2 border-gray-100 p-4 rounded-xl focus:border-indigo-500 outline-none transition" 
-              placeholder="admin@eduspace.com"
+              placeholder="admin@edusphere.com"
             />
           </div>
           <div>

@@ -446,7 +446,13 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId, isRetake = fa
   }
 
   const currentQuestion = questions[currentIndex];
-  const answeredCount = questions.filter((q) => Boolean(answers[q.question_id])).length;
+  const markedCount = questions.filter((q) => Boolean(marked[q.question_id])).length;
+  const answeredCount = questions.filter(
+    (q) => Boolean(answers[q.question_id]) && !marked[q.question_id]
+  ).length;
+  const notAnsweredCount = questions.filter(
+    (q) => !answers[q.question_id] && !marked[q.question_id]
+  ).length;
 
   const mins = String(Math.floor(timeLeft / 60)).padStart(2, '0');
   const secs = String(timeLeft % 60).padStart(2, '0');
@@ -624,11 +630,11 @@ const TestAttemptPage: React.FC<TestAttemptPageProps> = ({ userId, isRetake = fa
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Not Answered:</span>
-                <span className="font-semibold text-red-600">{questions.length - answeredCount}</span>
+                <span className="font-semibold text-red-600">{notAnsweredCount}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Marked for Review:</span>
-                <span className="font-semibold text-amber-600">{Object.values(marked).filter(Boolean).length}</span>
+                <span className="font-semibold text-amber-600">{markedCount}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Total:</span>
