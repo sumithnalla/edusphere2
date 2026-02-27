@@ -1,18 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
+// import { supabase } from '../lib/supabase';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Download } from 'lucide-react';
-
-interface QuestionPDF {
-  pdf_id: number;
-  title: string;
-  subject: 'maths' | 'physics' | 'chemistry' | 'general';
-  description: string;
-  pdf_url: string;
-  uploaded_at: string;
-  is_active: boolean;
-}
+import { STATIC_PDFS, type QuestionPDF } from '../src/data/pdfs';
 
 const Resources: React.FC = () => {
   const [pdfs, setPdfs] = useState<QuestionPDF[]>([]);
@@ -28,6 +19,13 @@ const Resources: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    setPdfs(STATIC_PDFS);
+    setLoading(false);
+    setError(null);
+  }, []);
+
+  /*
   useEffect(() => {
     const fetchPDFs = async () => {
       try {
@@ -73,6 +71,7 @@ const Resources: React.FC = () => {
 
     fetchPDFs();
   }, []);
+  */
 
   return (
     <div className="min-h-screen bg-gray-50">

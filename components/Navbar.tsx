@@ -112,12 +112,6 @@ const Navbar: React.FC = () => {
             >
               Login
             </Link>
-            <Link
-              to="/admin/login"
-              className="px-4 py-2 text-gray-500 hover:text-gray-700 text-sm font-medium transition-colors duration-200"
-            >
-              Admin
-            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -172,12 +166,6 @@ const Navbar: React.FC = () => {
                   className="block w-full text-left px-3 py-2 text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-lg font-medium transition-colors duration-200"
                 >
                   Login
-                </Link>
-                <Link
-                  to="/admin/login"
-                  className="block w-full text-left px-3 py-2 text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-lg text-sm font-medium transition-colors duration-200"
-                >
-                  Admin
                 </Link>
               </div>
             </div>
