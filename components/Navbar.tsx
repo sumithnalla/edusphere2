@@ -88,6 +88,13 @@ const Navbar: React.FC = () => {
               Courses
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-600 group-hover:w-full transition-all duration-300"></span>
             </button>
+            <Link 
+              to="/resources" 
+              className="text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200 relative group"
+            >
+              Resources
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-600 group-hover:w-full transition-all duration-300"></span>
+            </Link>
             <button 
               onClick={() => scrollToSection('contact')} 
               className="text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200 relative group"
@@ -146,6 +153,13 @@ const Navbar: React.FC = () => {
               >
                 Courses
               </button>
+              <Link
+                to="/resources"
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-lg font-medium transition-colors duration-200"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Resources
+              </Link>
               <button
                 onClick={() => scrollToSection('contact')}
                 className="block w-full text-left px-3 py-2 text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-lg font-medium transition-colors duration-200"

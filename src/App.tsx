@@ -14,6 +14,7 @@ import AdminDoubtsClasses from '../pages/AdminDoubtsClasses';
 import TermsConditions from '../pages/TermsConditions';
 import PrivacyPolicy from '../pages/PrivacyPolicy';
 import RefundPolicy from '../pages/RefundPolicy';
+import Resources from '../pages/Resources';
 
 const App: React.FC = () => {
   return (
@@ -24,6 +25,7 @@ const App: React.FC = () => {
         <Route path="/payment" element={<Payment />} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/resources" element={<Resources />} />
         <Route path="/terms-conditions" element={<TermsConditions />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/refund-policy" element={<RefundPolicy />} />

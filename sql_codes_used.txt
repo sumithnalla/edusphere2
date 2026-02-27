@@ -554,3 +554,13 @@ DROP CONSTRAINT batches_duration_months_check;
 ALTER TABLE batches
 ADD CONSTRAINT batches_duration_months_check
 CHECK (duration_months IN (6, 12, 18, 24, 36, 40));
+
+CREATE TABLE question_pdfs (
+  pdf_id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL,           -- "JEE Maths Chapter 5 Important Questions"
+  subject TEXT NOT NULL CHECK (subject IN ('maths', 'physics', 'chemistry', 'general')),
+  description TEXT,              -- "50 important questions on Integration"
+  pdf_url TEXT NOT NULL,         -- Supabase Storage public URL
+  uploaded_at TIMESTAMPTZ DEFAULT NOW(),
+  is_active BOOLEAN DEFAULT true
+);
